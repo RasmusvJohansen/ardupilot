@@ -21,12 +21,15 @@ const AP_HAL::HAL& hal = AP_HAL::get_HAL();
 
 void setup (void)
 {
+    hal.rcout->force_safety_off();
+
     hal.console->printf("Starting AP_HAL::RCOutput test\n");
 #if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
     BoardConfig.init();
 #endif
     for (uint8_t i = 0; i< 14; i++) {
         hal.rcout->enable_ch(i);
+        hal.rcout->set_freq(0xFF, 490);
     }
 }
 
