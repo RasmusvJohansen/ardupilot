@@ -17,12 +17,11 @@ AP_BoardConfig BoardConfig;
 void setup();
 void loop();
 
-const AP_HAL::HAL& hal = AP_HAL::get_HAL();
+const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
-void setup (void)
+void setup(void)
 {
     hal.rcout->force_safety_off();
-    
 
     hal.console->printf("Starting AP_HAL::RCOutput test\n");
 #if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
@@ -32,17 +31,19 @@ void setup (void)
     hal.rcout->set_freq(0xFF, 490);
 
     hal.scheduler->delay(1000);
-    for(int j=1000; j<=1500; j++){
-        hal.rcout->write(0,j);
+    for (int j = 1000; j <= 1500; j++)
+    {
+        hal.rcout->write(0, j);
         hal.scheduler->delay(5);
     }
-    for(int j=1500; j>=1000; j--){
-        hal.rcout->write(0,j);
+    for (int j = 1500; j >= 1000; j--)
+    {
+        hal.rcout->write(0, j);
         hal.scheduler->delay(5);
     }
 }
 
-void loop (void)
+void loop(void)
 {
     hal.rcout->write(0, 1500);
     hal.scheduler->delay(5);
