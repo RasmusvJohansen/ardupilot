@@ -455,6 +455,7 @@ bool Copter::current_mode_requires_mission() const
 // called at 100hz
 void Copter::rc_loop()
 {
+    hal.rcout->force_safety_off();
     // Read radio and 3-position switch on radio
     // -----------------------------------------
     read_radio();
@@ -465,6 +466,7 @@ void Copter::rc_loop()
     //     hal.console->printf("%i | ", rc().channel(j)->get_radio_in());
     // }
     hal.console->printf("%i \n", rc().channel(0)->get_radio_in());
+    motors->rc_write(0,2000);
 
 }
 

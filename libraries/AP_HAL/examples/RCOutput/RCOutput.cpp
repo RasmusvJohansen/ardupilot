@@ -22,33 +22,29 @@ const AP_HAL::HAL& hal = AP_HAL::get_HAL();
 void setup (void)
 {
     hal.rcout->force_safety_off();
+    
 
     hal.console->printf("Starting AP_HAL::RCOutput test\n");
 #if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
     BoardConfig.init();
 #endif
-    for (uint8_t i = 0; i< 14; i++) {
-        hal.rcout->enable_ch(i);
-        hal.rcout->set_freq(0xFF, 490);
+    hal.rcout->enable_ch(0);
+    hal.rcout->set_freq(0xFF, 490);
+
+    hal.scheduler->delay(1000);
+    for(int j=1000; j<=1500; j++){
+        hal.rcout->write(0,j);
+        hal.scheduler->delay(5);
+    }
+    for(int j=1500; j>=1000; j--){
+        hal.rcout->write(0,j);
+        hal.scheduler->delay(5);
     }
 }
 
-static uint16_t pwm = 1500;
-static int8_t delta = 1;
-
 void loop (void)
 {
-    for (uint8_t i=0; i < 14; i++) {
-        hal.rcout->write(i, pwm);
-        pwm += delta;
-        if (delta > 0 && pwm >= 2000) {
-            delta = -1;
-            hal.console->printf("decreasing\n");
-        } else if (delta < 0 && pwm <= 1000) {
-            delta = 1;
-            hal.console->printf("increasing\n");
-        }
-    }
+    hal.rcout->write(0, 1500);
     hal.scheduler->delay(5);
 }
 

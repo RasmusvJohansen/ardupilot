@@ -86,6 +86,7 @@ const struct Menu::command rcoutput_menu_commands[] = {
 MENU(menu, "Menu: ", rcoutput_menu_commands);
 
 void setup(void) {
+    hal.rcout->force_safety_off();
     hal.console->printf("Starting AP_HAL::RCOutput test\n");
 
 #if CONFIG_HAL_BOARD == HAL_BOARD_CHIBIOS
