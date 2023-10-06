@@ -458,6 +458,7 @@ bool Copter::current_mode_requires_mission() const
 // rc_loops - reads user input from transmitter/receiver
 // called at 100hz
 bool LastMeasHigh = false;
+bool LastMeasHigh2 = false;
 int currentPWM = 1000;
 void Copter::rc_loop()
 {
@@ -468,17 +469,29 @@ void Copter::rc_loop()
     rc().read_mode_switch();
 
     // motorController->setPWM(rc().channel(2)->get_radio_in(), 0);
-    hal.console->printf("Channel value %i", rc().channel(11)->get_radio_in());
+    // hal.console->printf("Channel value %i", rc().channel(11)->get_radio_in());
     if (rc().channel(11)->get_radio_in() > 1500 && !LastMeasHigh)
     {
         LastMeasHigh = true;
-        currentPWM += 100;
-        motorController->setPWM(currentPWM, 0);
+        currentPWM += 50;
+        
     }
     else if (rc().channel(11)->get_radio_in() < 1500 && LastMeasHigh)
     {
         LastMeasHigh = false;
     }
+    else if (rc().channel(4)->get_radio_in() > 1500 && !LastMeasHigh2)
+    {
+        LastMeasHigh2 = true;
+        currentPWM -= 50;
+        
+    }
+    else if (rc().channel(4)->get_radio_in() < 1500 && LastMeasHigh2)
+    {
+        LastMeasHigh2 = false;
+    }
+    motorController->setPWM(currentPWM, 0);
+    hal.console->printf("%i", currentPWM);
 }
 
 // throttle_loop - should be run at 50 hz
