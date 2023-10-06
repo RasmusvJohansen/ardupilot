@@ -173,6 +173,9 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 //     SCHED_TASK_CLASS(AP_OpticalFlow,          &copter.optflow,             update,         200, 160,  12),
 // #endif
 
+
+   SCHED_TASK_CLASS(Accelerometers,&Sensor_Accelerometer,getMeasurements,250,130,1),
+
     SCHED_TASK(update_batt_compass,   10,    120, 15),
 
     // Delete if not necessary

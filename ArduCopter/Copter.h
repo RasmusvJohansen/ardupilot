@@ -73,6 +73,13 @@
 #include <AP_OpticalFlow/AP_OpticalFlow.h>
 #include <AP_Winch/AP_Winch_config.h>
 
+//Our libaries 
+#include "Es_9_Sensor/Accelerometers.h"
+
+
+//--------------------
+
+
 // Configuration
 #include "defines.h"
 #include "config.h"
@@ -187,6 +194,7 @@
 
 class Copter : public AP_Vehicle {
 public:
+    //friend class Accelerometers;
     friend class GCS_MAVLINK_Copter;
     friend class GCS_Copter;
     friend class AP_Rally_Copter;
@@ -235,6 +243,7 @@ public:
     friend class ModeAutorotate;
     friend class ModeTurtle;
     friend class AP_ExternalControl_Copter;
+    
 
     Copter(void);
 
@@ -247,6 +256,11 @@ private:
     Parameters g;
     ParametersG2 g2;
 
+    //Create our objects 
+    Accelerometers *Sensor_Accelerometer = new Accelerometers();
+
+
+    
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
 
