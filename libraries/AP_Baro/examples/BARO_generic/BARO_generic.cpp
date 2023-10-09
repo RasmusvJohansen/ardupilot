@@ -55,8 +55,12 @@ void setup()
 
     // initialize the barometer
     barometer.init();
+    hal.scheduler->delay(5000);
+    hal.console->printf("Calibrating\n");
     barometer.calibrate();
-
+    hal.scheduler->delay(5000);
+    hal.console->printf("Calibrated\n");
+    hal.scheduler->delay(1000);
     // set up timer to count time in microseconds
     timer = AP_HAL::micros();
 }
