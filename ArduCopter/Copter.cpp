@@ -491,7 +491,7 @@ void Copter::rc_loop()
         LastMeasHigh2 = false;
     }
     motorController->setPWM(currentPWM, 0);
-    hal.console->printf("%i", currentPWM);
+    hal.console->printf("%i\n", currentPWM);
 }
 
 // throttle_loop - should be run at 50 hz
