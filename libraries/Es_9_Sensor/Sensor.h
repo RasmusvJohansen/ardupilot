@@ -1,3 +1,5 @@
+#pragma once
+
 #include <map>
 
 // This is the main class all sensor should inherit from. For an example of how to structure each sensor, look at

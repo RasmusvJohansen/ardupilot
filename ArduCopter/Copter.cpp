@@ -170,6 +170,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // #endif
 
     SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
+    SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 250, 130, 5),
 
     SCHED_TASK(update_batt_compass, 10, 120, 15),
 

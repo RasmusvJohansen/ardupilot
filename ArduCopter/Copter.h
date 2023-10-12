@@ -75,6 +75,7 @@
 
 // Our libaries
 #include "Es_9_Sensor/Accelerometers.h"
+#include "Es_9_Sensor/IMU.h"
 
 //--------------------
 
@@ -256,6 +257,7 @@ private:
     // Create our objects
 
     Accelerometers sensor_accelerometer;
+    IMU sensor_IMU;
 
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
