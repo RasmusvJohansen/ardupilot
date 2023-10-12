@@ -103,6 +103,7 @@ static void display_offsets_and_scaling()
                         (double)gyro_offsets.x,
                         (double)gyro_offsets.y,
                         (double)gyro_offsets.z);
+    hal.console->printf("%d %d %d %d %d %d %d %d", ins.accel_calibrated_ok_all(), ins.get_accel_count(), ins.get_gyro_count(), ins.use_accel(3), ins.use_gyro(0), ins.use_gyro(1), ins.use_gyro(2), ins.use_gyro(3));
 }
 
 static void run_test()
