@@ -16,18 +16,23 @@ bool Es_9_Motor::armMotors()
         hal.rcout->enable_ch(i);
     }
 
+    hal.rcout->cork();
     // ramp up motor to start sequence
     for (int i = 0; i <= numMotors; i++)
     {
         setPWM(1100, i);
     }
+    hal.rcout->push();
     hal.scheduler->delay(500);
+
+    hal.rcout->cork();
 
     // decrease to finish arming.
     for (int i = 0; i <= numMotors; i++)
     {
         setPWM(1000, i);
     }
+    hal.rcout->push();
     hal.scheduler->delay(1000);
     // change to true/false if armed?
     return true;

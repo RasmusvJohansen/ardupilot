@@ -474,7 +474,6 @@ void Copter::rc_loop()
     {
         LastMeasHigh = true;
         currentPWM += 50;
-        
     }
     else if (rc().channel(11)->get_radio_in() < 1500 && LastMeasHigh)
     {
@@ -484,13 +483,17 @@ void Copter::rc_loop()
     {
         LastMeasHigh2 = true;
         currentPWM -= 50;
-        
     }
     else if (rc().channel(4)->get_radio_in() < 1500 && LastMeasHigh2)
     {
         LastMeasHigh2 = false;
     }
-    motorController->setPWM(currentPWM, 0);
+    for (int i = 0; i < 4; i++)
+    {
+        hal.rcout->cork();
+        motorController->setPWM(currentPWM, i);
+        hal.rcout->push();
+    }
     hal.console->printf("%i\n", currentPWM);
 }
 
