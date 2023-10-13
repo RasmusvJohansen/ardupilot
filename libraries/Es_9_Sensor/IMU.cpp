@@ -15,12 +15,15 @@ void IMU::init()
     }
 
     // Init sensors here
+    // The IMU is already initialised in system.cpp line 230. Check loop rate 
 }
 
 void IMU::updateMeasurements()
 {
-    // Goes through each senor, and measurement type and update each values with the current measurement.
+    // Update gyro and accel values from backends
+    ins.update();
 
+    // Goes through each senor, and measurement type and update each values with the current measurement.
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)

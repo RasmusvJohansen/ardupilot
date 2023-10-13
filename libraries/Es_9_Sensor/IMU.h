@@ -1,5 +1,8 @@
 #include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
+#include "AP_InertialSensor/AP_InertialSensor.h"
+
+static AP_InertialSensor ins;
 
 class IMU : public Sensor
 {
@@ -9,12 +12,10 @@ public:
     // Remember sensor_List_stop
     enum class Sensors : int
     {
-
-        Sensor1,
-        Sensor2,
-        Sensor3,
+        IMU1,
+        IMU2,
+        IMU3,
         Sensor_List_stop,
-
     };
     // This can be changed to contain all measurements.
     // Remeber Measurments_Type_List_Stop
@@ -22,8 +23,11 @@ public:
     {
         acc_x,
         acc_y,
+        acc_x,
+        gyr_x,
+        gyr_y,
+        gyr_z,
         Measurements_Type_List_Stop,
-
     };
 
     virtual void init() override;
