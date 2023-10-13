@@ -5,18 +5,25 @@
 #define ES_9_MOTORS_H
 
 // #include <AP_HAL/AP_HAL.h>
+#include <stdint.h>
 
 class Es_9_Motor
 {
 private:
     bool isArmed;
-    int numMotors;
+    uint8_t numMotors;
+    uint16_t minPeriod { 1000 };
+    uint16_t maxPeriod { 1000 };
+    uint16_t armPeriod { 1100 };
+    void setPeriod(uint16_t period);
+    void setPeriod(uint16_t periodMotorOne, uint16_t periodMotorTwo, uint16_t periodMotorThree, uint16_t periodMotorFour);
 
 public:
-    Es_9_Motor(int NumMotors);
-    bool armMotors();
-    void setPWM(int PWM, int motor_channel);
-    int getPWM(int motor_channel) const;
+    Es_9_Motor(uint8_t NumMotors);
+    void armMotors();
+    void disarmMotors();
+    void setAllMotorPeriod(uint16_t periodMotorOne, uint16_t periodMotorTwo, uint16_t periodMotorThree, uint16_t periodMotorFour);
+    bool getIsArmed() const;
 };
 
 #endif

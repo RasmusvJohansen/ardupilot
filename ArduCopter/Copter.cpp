@@ -457,44 +457,57 @@ bool Copter::current_mode_requires_mission() const
 
 // rc_loops - reads user input from transmitter/receiver
 // called at 100hz
-bool LastMeasHigh = false;
-bool LastMeasHigh2 = false;
-int currentPWM = 1000;
 void Copter::rc_loop()
 {
-    hal.rcout->force_safety_off();
     // Read radio and 3-position switch on radio
     // -----------------------------------------
     read_radio();
     rc().read_mode_switch();
 
-    // motorController->setPWM(rc().channel(2)->get_radio_in(), 0);
-    // hal.console->printf("Channel value %i", rc().channel(11)->get_radio_in());
-    if (rc().channel(11)->get_radio_in() > 1500 && !LastMeasHigh)
+    if(rc().channel(4)->get_radio_in() > 1500)
     {
-        LastMeasHigh = true;
-        currentPWM += 50;
+        if (motorController->getIsArmed())
+        {
+            motorController->disarmMotors();
+        }
     }
-    else if (rc().channel(11)->get_radio_in() < 1500 && LastMeasHigh)
+    else if (rc().channel(4)->get_radio_in() < 1500)
     {
-        LastMeasHigh = false;
+        if (!motorController->getIsArmed())
+        {
+            motorController->disarmMotors();
+        }
     }
-    else if (rc().channel(4)->get_radio_in() > 1500 && !LastMeasHigh2)
-    {
-        LastMeasHigh2 = true;
-        currentPWM -= 50;
-    }
-    else if (rc().channel(4)->get_radio_in() < 1500 && LastMeasHigh2)
-    {
-        LastMeasHigh2 = false;
-    }
-    for (int i = 0; i < 4; i++)
-    {
-        hal.rcout->cork();
-        motorController->setPWM(currentPWM, i);
-        hal.rcout->push();
-    }
-    hal.console->printf("%i\n", currentPWM);
+    
+    motorController->setAllMotorPeriod(1000, 1000, 1000, 1000);
+
+    // // motorController->setPWM(rc().channel(2)->get_radio_in(), 0);
+    // // hal.console->printf("Channel value %i", rc().channel(11)->get_radio_in());
+    // if (rc().channel(11)->get_radio_in() > 1500 && !LastMeasHigh)
+    // {
+    //     LastMeasHigh = true;
+    //     currentPWM += 50;
+    // }
+    // else if (rc().channel(11)->get_radio_in() < 1500 && LastMeasHigh)
+    // {
+    //     LastMeasHigh = false;
+    // }
+    // else if (rc().channel(4)->get_radio_in() > 1500 && !LastMeasHigh2)
+    // {
+    //     LastMeasHigh2 = true;
+    //     currentPWM -= 50;
+    // }
+    // else if (rc().channel(4)->get_radio_in() < 1500 && LastMeasHigh2)
+    // {
+    //     LastMeasHigh2 = false;
+    // }
+    // for (int i = 0; i < 4; i++)
+    // {
+    //     hal.rcout->cork();
+    //     motorController->setPWM(currentPWM, i);
+    //     hal.rcout->push();
+    // }
+    // hal.console->printf("%i\n", currentPWM);
 }
 
 // throttle_loop - should be run at 50 hz
