@@ -1,6 +1,6 @@
 #include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
-#include "AP_InertialSensor/AP_InertialSensor.h"
+#include <AP_InertialSensor/AP_InertialSensor.h>
 
 static AP_InertialSensor imu;
 

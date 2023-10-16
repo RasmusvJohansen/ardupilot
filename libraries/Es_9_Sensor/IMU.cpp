@@ -16,6 +16,8 @@ void IMU::init()
 
     // Init sensors here
     // The IMU is already initialised in system.cpp line 230. Check loop rate 
+
+    // Accel calibration in ap_vehicle
 }
 
 void IMU::updateMeasurements()
