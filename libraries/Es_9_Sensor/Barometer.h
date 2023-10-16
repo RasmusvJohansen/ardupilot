@@ -1,7 +1,10 @@
 #include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
+#include <AP_Baro/AP_Baro.h>
 
-class Accelerometers : public Sensor
+static AP_Baro barometer;
+
+class Barometer : public Sensor
 {
 
 public:
@@ -9,9 +12,8 @@ public:
     // Remember sensor_List_stop
     enum class Sensors : int
     {
-        Sensor1,
-        Sensor2,
-        Sensor3,
+        Baro1,
+        Baro2,
         Sensor_List_stop,
     };
     // This can be changed to contain all measurements.
@@ -25,7 +27,7 @@ public:
 
     virtual void init() override;
     virtual void updateMeasurements() override;
-    std::map<Accelerometers::Sensors, std::map<Accelerometers::Measurements, float>> getMeasurements();
+    std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> getMeasurements();
 
     virtual void loop() override;
 

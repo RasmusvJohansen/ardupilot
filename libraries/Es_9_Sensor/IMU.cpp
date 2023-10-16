@@ -20,15 +20,24 @@ void IMU::init()
 
 void IMU::updateMeasurements()
 {
-    // Update gyro and accel values from backends
-    ins.update();
+    //Vector3f accel;
+    //Vector3f gyro;
+
+    // Clear out any existing samples from imu and update gyro and accel values from backends
+    imu.update();
 
     // Goes through each senor, and measurement type and update each values with the current measurement.
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
+        // Get accel and gyro measurements
+        //accel = imu.get_accel(sensor);
+        //gyro = imu.get_gyro(sensor);
+        const Vector3f &accel = imu.get_accel(sensor);
+        const Vector3f &gyro = imu.get_gyro(sensor);
+
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
-            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = 1; // here it should get the corresponding measurement for the sensor and measurement type
+            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = (measurement < 3) ? accel[measurement] : gyro[measurement - 3]; // here it should get the corresponding measurement for the sensor and measurement type
         }
     }
 }

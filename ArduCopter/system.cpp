@@ -19,6 +19,8 @@ void Copter::init_ardupilot()
     // Inits are placed here
     sensor_accelerometer.init();
     sensor_IMU.init();
+    sensor_barometer.init();
+    sensor_magnetometer.init();
 
     //------------
 
