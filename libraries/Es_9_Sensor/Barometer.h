@@ -20,8 +20,7 @@ public:
     // Remeber Measurments_Type_List_Stop
     enum class Measurements : int
     {
-        acc_x,
-        acc_y,
+        altitude,
         Measurements_Type_List_Stop,
     };
 

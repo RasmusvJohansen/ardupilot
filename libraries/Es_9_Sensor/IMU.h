@@ -23,7 +23,7 @@ public:
     {
         acc_x,
         acc_y,
-        acc_x,
+        acc_z,
         gyr_x,
         gyr_y,
         gyr_z,
