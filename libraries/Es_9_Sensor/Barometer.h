@@ -2,8 +2,6 @@
 #include "AP_HAL/AP_HAL.h"
 #include <AP_Baro/AP_Baro.h>
 
-static AP_Baro barometer;
-
 class Barometer : public Sensor
 {
 
@@ -31,6 +29,8 @@ public:
     virtual void loop() override;
 
 private:
+    AP_Baro barometer;
+
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
     std::map<Sensors, std::map<Measurements, float>> sensors;

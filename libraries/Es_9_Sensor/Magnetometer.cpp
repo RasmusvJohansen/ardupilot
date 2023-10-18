@@ -27,7 +27,7 @@ void Magnetometer::updateMeasurements()
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         // Return the current field as a Vector3f in milligauss
-        const Vector3f &mag = magnetometer.get_field(sensor);
+        mag = magnetometer.get_field(sensor);
 
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
@@ -45,7 +45,6 @@ void Magnetometer::loop()
 {
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
-    //hal.console->printf("%f", sensors.at(Magnetometer::Sensors::Sensor1).at(Magnetometer::Measurements::acc_x));
-    //updateMeasurements();
-    //hal.console->printf("%f", sensors.at(Magnetometer::Sensors::Sensor1).at(Magnetometer::Measurements::acc_x));
+    updateMeasurements();
+    hal.console->printf("Mag x: %f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_x));
 }

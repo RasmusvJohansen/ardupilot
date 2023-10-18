@@ -2,8 +2,6 @@
 #include "AP_HAL/AP_HAL.h"
 #include <AP_InertialSensor/AP_InertialSensor.h>
 
-static AP_InertialSensor imu;
-
 class IMU : public Sensor
 {
 
@@ -37,6 +35,13 @@ public:
     virtual void loop() override;
 
 private:
+    AP_InertialSensor imu;
+
+    Vector3f accel;
+    Vector3f gyro;
+
+    int NrOfAccMeas{ 3 }; // noget
+
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
     std::map<Sensors, std::map<Measurements, float>> sensors;

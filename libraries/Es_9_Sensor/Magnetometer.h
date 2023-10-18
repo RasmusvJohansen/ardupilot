@@ -2,8 +2,6 @@
 #include "AP_HAL/AP_HAL.h"
 #include <AP_Compass/AP_Compass.h>
 
-static Compass magnetometer;
-
 class Magnetometer : public Sensor
 {
 
@@ -32,6 +30,10 @@ public:
     virtual void loop() override;
 
 private:
+    Compass magnetometer;
+
+    Vector3f mag;
+
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
     std::map<Sensors, std::map<Measurements, float>> sensors;

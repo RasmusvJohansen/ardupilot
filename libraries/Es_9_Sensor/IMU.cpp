@@ -22,8 +22,6 @@ void IMU::init()
 
 void IMU::updateMeasurements()
 {
-    //Vector3f accel;
-    //Vector3f gyro;
 
     // Clear out any existing samples from imu and update gyro and accel values from backends
     imu.update();
@@ -32,14 +30,13 @@ void IMU::updateMeasurements()
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         // Get accel and gyro measurements
-        //accel = imu.get_accel(sensor);
-        //gyro = imu.get_gyro(sensor);
-        const Vector3f &accel = imu.get_accel(sensor);
-        const Vector3f &gyro = imu.get_gyro(sensor);
+        accel = imu.get_accel(sensor);
+        gyro = imu.get_gyro(sensor);
 
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
-            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = (measurement < 3) ? accel[measurement] : gyro[measurement - 3]; // here it should get the corresponding measurement for the sensor and measurement type
+
+            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = (measurement < NrOfAccMeas) ? accel[measurement] : gyro[measurement - NrOfAccMeas]; // here it should get the corresponding measurement for the sensor and measurement type
         }
     }
 }
@@ -53,7 +50,6 @@ void IMU::loop()
 {
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
-    //hal.console->printf("%f", sensors.at(IMU::Sensors::Sensor1).at(IMU::Measurements::acc_x));
-    //updateMeasurements();
-    //hal.console->printf("%f", sensors.at(IMU::Sensors::Sensor1).at(IMU::Measurements::acc_x));
+    updateMeasurements();
+    hal.console->printf("IMU x: %f \n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x));
 }

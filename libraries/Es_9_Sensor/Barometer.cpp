@@ -45,7 +45,6 @@ void Barometer::loop()
 {
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
-    //hal.console->printf("%f", sensors.at(Barometer::Sensors::Sensor1).at(Barometer::Measurements::acc_x));
-    //updateMeasurements();
-    //hal.console->printf("%f", sensors.at(Barometer::Sensors::Sensor1).at(Barometer::Measurements::acc_x));
+    updateMeasurements();
+    hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro1).at(Barometer::Measurements::altitude));
 }
