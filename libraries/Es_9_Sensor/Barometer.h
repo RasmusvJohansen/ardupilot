@@ -31,6 +31,8 @@ public:
 private:
     AP_Baro barometer;
 
+    int counter { 0 };
+
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
     std::map<Sensors, std::map<Measurements, float>> sensors;

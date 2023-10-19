@@ -40,6 +40,7 @@ void Accelerometers::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     //hal.console->printf("%f", sensors.at(Accelerometers::Sensors::Sensor1).at(Accelerometers::Measurements::acc_x));
-    //updateMeasurements();
-    //hal.console->printf("%f", sensors.at(Accelerometers::Sensors::Sensor1).at(Accelerometers::Measurements::acc_x));
+    updateMeasurements();
+    hal.console->printf("%f", sensors.at(Accelerometers::Sensors::Sensor1).at(Accelerometers::Measurements::acc_x));
+    hal.scheduler->delay(50);
 }

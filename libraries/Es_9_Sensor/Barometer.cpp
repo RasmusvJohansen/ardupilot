@@ -20,18 +20,24 @@ void Barometer::init()
 
 void Barometer::updateMeasurements()
 {
-    // Accumulate not neccesary, as the MS5611 has a timer
-
-    // Call update on all drivers (backend) and push them to frontend
-    barometer.update();
-
-    // Goes through each senor, and measurement type and update each values with the current measurement.
-
-    for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
+    // Accumulates barometer 5 times before
+    barometer.accumulate();
+    hal.console->printf("Counter: %d \n", counter);
+    if (counter++ > 4)
     {
-        for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
+        counter = 0;
+
+        // Call update on all drivers (backend) and push them to frontend
+        barometer.update();
+
+        // Goes through each senor, and measurement type and update each values with the current measurement.
+
+        for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
         {
-            sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = barometer.get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
+            for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
+            {
+                sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = barometer.get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
+            }
         }
     }
 }
@@ -44,7 +50,7 @@ std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> Barometer
 void Barometer::loop()
 {
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
-
+    //hal.console->printf("Baro test");
     updateMeasurements();
-    hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro1).at(Barometer::Measurements::altitude));
+    hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
 }

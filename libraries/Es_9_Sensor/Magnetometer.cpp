@@ -21,6 +21,7 @@ void Magnetometer::init()
 void Magnetometer::updateMeasurements()
 {
     // Read compass values and update mag variables
+    magnetometer.read();
 
     // Goes through each senor, and measurement type and update each values with the current measurement.
 
