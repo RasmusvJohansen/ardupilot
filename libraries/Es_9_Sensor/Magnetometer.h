@@ -1,6 +1,6 @@
 #include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
-#include <AP_Compass/AP_Compass.h>
+#include "AP_Compass/AP_Compass.h"
 
 class Magnetometer : public Sensor
 {

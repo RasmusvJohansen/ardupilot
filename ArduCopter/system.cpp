@@ -17,8 +17,8 @@ void Copter::init_ardupilot()
 {
 
     // Inits are placed here
-    sensor_accelerometer.init();
-    sensor_IMU.init();
+    //sensor_accelerometer.init();
+    //sensor_IMU.init();
     sensor_barometer.init();
     sensor_magnetometer.init();
 
@@ -54,7 +54,7 @@ void Copter::init_ardupilot()
     // Init RSSI
     rssi.init();
 
-    barometer.init();
+    //barometer.init();
 
     // setup telem slots with serial ports
     gcs().setup_uarts();
@@ -159,7 +159,7 @@ void Copter::init_ardupilot()
     // read Baro pressure at ground
     //-----------------------------
     barometer.set_log_baro_bit(MASK_LOG_IMU);
-    barometer.calibrate();
+    //barometer.calibrate();
 
 #if RANGEFINDER_ENABLED == ENABLED
     // initialise rangefinder

@@ -170,11 +170,11 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // #endif
 
     //SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
-    SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
+    //SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 50, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 10, 120, 7),
 
-    //SCHED_TASK(update_batt_compass, 10, 120, 15),
+    SCHED_TASK(update_batt_compass, 10, 120, 15),
 
 // Delete if not necessary
 // SCHED_TASK_CLASS(RC_Channels, (RC_Channels*)&copter.g2.rc_channels, read_aux_all,    10,  50,  18), ---------------------------

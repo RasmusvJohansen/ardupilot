@@ -16,6 +16,8 @@ void Barometer::init()
 
     // Init sensors here
     // Init and calibration in system.cpp (search for barometer)
+    barometer.init();
+    barometer.calibrate();
 }
 
 void Barometer::updateMeasurements()
@@ -39,6 +41,16 @@ void Barometer::updateMeasurements()
                 sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = barometer.get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
             }
         }
+        //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
+                hal.console->printf(" Pressure: %.2f Pa\n"
+                            " Temperature: %.2f degC\n"
+                            " Relative Altitude: %.2f m\n"
+                            " climb=%.2f m/s\n"
+                            "\n",
+                            (double)barometer.get_pressure(),
+                            (double)barometer.get_temperature(),
+                            (double)barometer.get_altitude(),
+                            (double)barometer.get_climb_rate());
     }
 }
 
@@ -52,5 +64,5 @@ void Barometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
     //hal.console->printf("Baro test");
     updateMeasurements();
-    hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
+    //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
 }

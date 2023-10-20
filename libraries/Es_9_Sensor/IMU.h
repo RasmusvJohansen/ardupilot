@@ -1,6 +1,6 @@
 #include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
-#include <AP_InertialSensor/AP_InertialSensor.h>
+#include "AP_InertialSensor/AP_InertialSensor.h"
 
 class IMU : public Sensor
 {
@@ -37,8 +37,8 @@ public:
 private:
     AP_InertialSensor imu;
 
-    Vector3f accel;
-    Vector3f gyro;
+    //Vector3f accel;
+    //Vector3f gyro;
 
     int NrOfAccMeas{ 3 }; // noget
 

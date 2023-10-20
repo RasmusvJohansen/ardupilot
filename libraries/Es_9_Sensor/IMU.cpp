@@ -15,7 +15,8 @@ void IMU::init()
     }
 
     // Init sensors here
-    // The IMU is already initialised in system.cpp line 230. Check loop rate 
+    // The IMU is already initialised in system.cpp line 230. Check loop rate (maybe 400?)
+    //imu.init(400);
 
     // Accel calibration in ap_vehicle
 }
@@ -30,13 +31,13 @@ void IMU::updateMeasurements()
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         // Get accel and gyro measurements
-        accel = imu.get_accel(sensor);
-        gyro = imu.get_gyro(sensor);
+        //accel = imu.get_accel(sensor);
+        //gyro = imu.get_gyro(sensor);
 
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
 
-            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = (measurement < NrOfAccMeas) ? accel[measurement] : gyro[measurement - NrOfAccMeas]; // here it should get the corresponding measurement for the sensor and measurement type
+            //sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = (measurement < NrOfAccMeas) ? accel[measurement] : gyro[measurement - NrOfAccMeas]; // here it should get the corresponding measurement for the sensor and measurement type
         }
     }
 }

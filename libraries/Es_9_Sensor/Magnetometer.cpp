@@ -15,7 +15,8 @@ void Magnetometer::init()
     }
 
     // Init sensors here
-    // ahrs and compass init in system.cpp
+    // ahrs and compass init in system.cpp line 118
+    //magnetometer.init();
 }
 
 void Magnetometer::updateMeasurements()
@@ -47,5 +48,6 @@ void Magnetometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-    hal.console->printf("Mag x: %f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_x));
+    //hal.console->printf("Mag x: %f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_x));
+    hal.console->printf("init done - %u compasses detected\n", magnetometer.get_count());
 }
