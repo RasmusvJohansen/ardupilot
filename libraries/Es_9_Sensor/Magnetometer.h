@@ -30,7 +30,7 @@ public:
     virtual void loop() override;
 
 private:
-    Compass magnetometer;
+    //Compass magnetometer;
 
     Vector3f mag;
 

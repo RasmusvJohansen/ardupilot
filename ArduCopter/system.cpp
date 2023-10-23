@@ -18,8 +18,8 @@ void Copter::init_ardupilot()
 
     // Inits are placed here
     //sensor_accelerometer.init();
-    //sensor_IMU.init();
-    //sensor_barometer.init();
+    sensor_IMU.init();
+    sensor_barometer.init();
     //sensor_magnetometer.init();
 
     //------------
@@ -114,10 +114,10 @@ void Copter::init_ardupilot()
     gps.set_log_gps_bit(MASK_LOG_GPS);
     gps.init(serial_manager);
 
-    AP::compass().set_log_bit(MASK_LOG_COMPASS);
-    AP::compass().init();
-    hal.scheduler->delay(1000);
-    hal.console->printf("init done - %u compasses detected\n", compass.get_count());
+    //AP::compass().set_log_bit(MASK_LOG_COMPASS);
+    //AP::compass().init();
+    //hal.scheduler->delay(5000);
+    //hal.console->printf("init done - %u compasses detected\n", compass.get_count());
 
 #if AP_AIRSPEED_ENABLED
     airspeed.set_log_bit(MASK_LOG_IMU);
@@ -238,7 +238,7 @@ void Copter::startup_INS_ground()
     ahrs.set_vehicle_class(AP_AHRS::VehicleClass::COPTER);
 
     // Warm up and calibrate gyro offsets
-    ins.init(scheduler.get_loop_rate_hz());
+    //ins.init(scheduler.get_loop_rate_hz());
 
     // reset ahrs including gyro bias
     ahrs.reset();

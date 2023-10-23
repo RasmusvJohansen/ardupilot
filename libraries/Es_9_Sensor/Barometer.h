@@ -29,7 +29,7 @@ public:
     virtual void loop() override;
 
 private:
-    AP_Baro barometer;
+    //AP_Baro barometer;
 
     int counter { 0 };
 

@@ -16,20 +16,23 @@ void Magnetometer::init()
 
     // Init sensors here
     // ahrs and compass init in system.cpp line 118
+    //magnetometer.set_log_bit(1<<13);
     //magnetometer.init();
+    //hal.scheduler->delay(5000);
+    //hal.console->printf("init done - %u compasses detected\n", magnetometer.get_count());
 }
 
 void Magnetometer::updateMeasurements()
 {
     // Read compass values and update mag variables
-    magnetometer.read();
+    AP::compass().read();
 
     // Goes through each senor, and measurement type and update each values with the current measurement.
 
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         // Return the current field as a Vector3f in milligauss
-        mag = magnetometer.get_field(sensor);
+        mag = AP::compass().get_field(sensor);
 
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {

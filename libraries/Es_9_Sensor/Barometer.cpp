@@ -16,21 +16,21 @@ void Barometer::init()
 
     // Init sensors here
     // Init and calibration in system.cpp (search for barometer)
-    barometer.init();
-    barometer.calibrate();
+    AP::baro().init();
+    AP::baro().calibrate();
 }
 
 void Barometer::updateMeasurements()
 {
     // Accumulates barometer 5 times before
-    barometer.accumulate();
-    hal.console->printf("Counter: %d \n", counter);
+    AP::baro().accumulate();
+    // hal.console->printf("Counter: %d \n", counter);
     if (counter++ > 4)
     {
         counter = 0;
 
         // Call update on all drivers (backend) and push them to frontend
-        barometer.update();
+        AP::baro().update();
 
         // Goes through each senor, and measurement type and update each values with the current measurement.
 
@@ -38,19 +38,11 @@ void Barometer::updateMeasurements()
         {
             for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
             {
-                sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = barometer.get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
+                // Measure altitude in meters
+                sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = AP::baro().get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
             }
         }
         //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
-                hal.console->printf(" Pressure: %.2f Pa\n"
-                            " Temperature: %.2f degC\n"
-                            " Relative Altitude: %.2f m\n"
-                            " climb=%.2f m/s\n"
-                            "\n",
-                            (double)barometer.get_pressure(),
-                            (double)barometer.get_temperature(),
-                            (double)barometer.get_altitude(),
-                            (double)barometer.get_climb_rate());
     }
 }
 

@@ -35,10 +35,8 @@ public:
     virtual void loop() override;
 
 private:
-    AP_InertialSensor imu;
-
-    //Vector3f accel;
-    //Vector3f gyro;
+    Vector3f acc;
+    Vector3f gyr;
 
     int NrOfAccMeas{ 3 }; // noget
 
