@@ -52,5 +52,5 @@ void Magnetometer::loop()
 
     updateMeasurements();
     //hal.console->printf("Mag x: %f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_x));
-    hal.console->printf("init done - %u compasses detected\n", magnetometer.get_count());
+    hal.console->printf("init done - %u compasses detected\n", AP::compass().get_count());
 }
