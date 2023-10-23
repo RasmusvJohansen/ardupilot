@@ -19,8 +19,8 @@ void Copter::init_ardupilot()
     // Inits are placed here
     //sensor_accelerometer.init();
     //sensor_IMU.init();
-    sensor_barometer.init();
-    sensor_magnetometer.init();
+    //sensor_barometer.init();
+    //sensor_magnetometer.init();
 
     //------------
 
@@ -116,6 +116,8 @@ void Copter::init_ardupilot()
 
     AP::compass().set_log_bit(MASK_LOG_COMPASS);
     AP::compass().init();
+    hal.scheduler->delay(1000);
+    hal.console->printf("init done - %u compasses detected\n", compass.get_count());
 
 #if AP_AIRSPEED_ENABLED
     airspeed.set_log_bit(MASK_LOG_IMU);
