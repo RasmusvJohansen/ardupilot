@@ -77,7 +77,7 @@
 //#include "Es_9_Sensor/Accelerometers.h"
 #include "Es_9_Sensor/IMU.h"
 #include "Es_9_Sensor/Barometer.h"
-//#include "Es_9_Sensor/Magnetometer.h"
+#include "Es_9_Sensor/Magnetometer.h"
 
 //--------------------
 
@@ -261,7 +261,7 @@ private:
     //Accelerometers sensor_accelerometer;
     IMU sensor_IMU;
     Barometer sensor_barometer;
-    //Magnetometer sensor_magnetometer;
+    Magnetometer sensor_magnetometer;
 
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
