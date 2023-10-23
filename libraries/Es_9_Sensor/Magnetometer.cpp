@@ -17,7 +17,7 @@ void Magnetometer::init()
     // Init sensors here
     // ahrs and compass init in system.cpp line 118
     //magnetometer.set_log_bit(1<<13);
-    //magnetometer.init();
+    AP::compass().init();
     //hal.scheduler->delay(5000);
     //hal.console->printf("init done - %u compasses detected\n", magnetometer.get_count());
 }
@@ -32,6 +32,11 @@ void Magnetometer::updateMeasurements()
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         // Return the current field as a Vector3f in milligauss
+            Matrix3f dcm_matrix;
+            // use roll = 0, pitch = 0 for this example
+            dcm_matrix.from_euler(0, 0, 0);
+            heading = AP::compass().calculate_heading(dcm_matrix, 0);
+
         mag = AP::compass().get_field(sensor);
 
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
@@ -51,6 +56,9 @@ void Magnetometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-    //hal.console->printf("Mag x: %f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_x));
-    hal.console->printf("init done - %u compasses detected\n", AP::compass().get_count());
+    hal.console->printf("Mag x: %.2f ", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_x));
+    hal.console->printf("Mag y: %.2f ", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_y));
+    hal.console->printf("Mag z: %.2f ", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_z));
+    hal.console->printf("Heading: %.2f\n", (double)ToDeg(heading));
+    //hal.console->printf("init done - %u compasses detected\n", AP::compass().get_count());
 }
