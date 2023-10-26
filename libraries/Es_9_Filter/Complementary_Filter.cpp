@@ -15,7 +15,7 @@ void Complementary_Filter::loop()
     updateRoll();
     updatePitch();
     updateYaw();
-    hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw);
+    hal.console->printf("roll: %.2f ",Complementary_roll);
     
 }   
 
@@ -33,7 +33,7 @@ void Complementary_Filter::updateRoll()
     //2. fuse both sensor measurements
     //3. save it to the complementary filter. 
     
-    filtered_roll = Complementary_Period/(Complementary_Period+2*tau_roll)*(tau_roll*_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x)+_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x)); 
+    filtered_roll = Complementary_Period/(Complementary_Period+2*tau_roll)*(tau_roll*_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x)+_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_roll)); 
 
     Complementary_roll = filtered_roll  + filtered_roll_prev - (Complementary_Period-2*tau_roll)/(Complementary_Period+2*tau_roll)*Complementary_roll_prev;
 
@@ -47,7 +47,7 @@ void Complementary_Filter::updateRoll()
 void Complementary_Filter::updatePitch()
 {
     //pitch follows the same form as roll 
-    filtered_pitch = Complementary_Period/(Complementary_Period+2*tau_pitch)*(tau_pitch*_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y)+_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y)); 
+    filtered_pitch = Complementary_Period/(Complementary_Period+2*tau_pitch)*(tau_pitch*_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y)+_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_pitch)); 
 
     Complementary_pitch = filtered_pitch  + filtered_pitch_prev - (Complementary_Period-2*tau_pitch)/(Complementary_Period+2*tau_pitch)*Complementary_pitch_prev;
 
@@ -69,7 +69,7 @@ void Complementary_Filter::updateYaw()
     }
     else 
     {
-        filtered_yaw = magnetometer_Period/(magnetometer_Period+2*tau_yaw)*(tau_yaw*gyro_angular_velocity_accumulation + _magnetometer.getMeasurements().at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_z));
+        filtered_yaw = magnetometer_Period/(magnetometer_Period+2*tau_yaw)*(tau_yaw*gyro_angular_velocity_accumulation + _magnetometer.getMeasurements().at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
 
         Complementary_yaw = filtered_yaw  + filtered_yaw_prev - (magnetometer_Period-2*tau_yaw)/(magnetometer_Period+2*tau_yaw)*Complementary_yaw_prev;
 
@@ -78,6 +78,7 @@ void Complementary_Filter::updateYaw()
         Complementary_yaw_prev = Complementary_yaw;        
 
         sampling_time =0.0;
+        gyro_angular_velocity_accumulation = 0.0;
     }
 
     
