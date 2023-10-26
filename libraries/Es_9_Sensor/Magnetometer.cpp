@@ -57,5 +57,5 @@ void Magnetometer::loop()
 
     updateMeasurements();
     // hal.console->printf("Yaw: %.2f ", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
-    // hal.console->printf("Offset: %.2f \n", yaw_start_value);
+    hal.console->printf("Offset: %.2f \n", yaw_start_value);
 }
