@@ -1,4 +1,5 @@
 #include "Sensor.h"
+#pragma once
 #include "AP_HAL/AP_HAL.h"
 #include "AP_Compass/AP_Compass.h"
 

@@ -169,11 +169,11 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     //     SCHED_TASK_CLASS(AP_OpticalFlow,          &copter.optflow,             update,         200, 160,  12),
     // #endif
 
-    //SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
+    // SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
     SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 50, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 10, 120, 7),
-
+    SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400,120, 8),
     SCHED_TASK(update_batt_compass, 10, 120, 15),
 
 // Delete if not necessary

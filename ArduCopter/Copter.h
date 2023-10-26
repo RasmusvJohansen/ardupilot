@@ -74,10 +74,11 @@
 #include <AP_Winch/AP_Winch_config.h>
 
 // Our libaries
-//#include "Es_9_Sensor/Accelerometers.h"
+// #include "Es_9_Sensor/Accelerometers.h"
 #include "Es_9_Sensor/IMU.h"
 #include "Es_9_Sensor/Barometer.h"
 #include "Es_9_Sensor/Magnetometer.h"
+#include "Es_9_Filter/Complementary_Filter.h"
 
 //--------------------
 
@@ -247,7 +248,7 @@ public:
     friend class AP_ExternalControl_Copter;
 
     Copter(void);
-
+    
 private:
     // key aircraft parameters passed to multiple libraries
     AP_MultiCopter aparm;
@@ -257,12 +258,14 @@ private:
     ParametersG2 g2;
 
     // Create our objects
-
-    //Accelerometers sensor_accelerometer;
+    // Sensors.
     IMU sensor_IMU;
     Barometer sensor_barometer;
     Magnetometer sensor_magnetometer;
-
+    
+    // Filters.
+    Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
+    
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
 
