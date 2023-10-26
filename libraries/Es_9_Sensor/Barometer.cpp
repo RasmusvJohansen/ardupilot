@@ -32,7 +32,7 @@ void Barometer::updateMeasurements()
         // Call update on all drivers (backend) and push them to frontend
         AP::baro().update();
 
-        // Goes through each senor, and measurement type and update each values with the current measurement.
+        // Goes through each sensor, and measurement type and update each values with the current measurement.
 
         for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
         {

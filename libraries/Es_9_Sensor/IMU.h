@@ -19,12 +19,11 @@ public:
     // Remeber Measurments_Type_List_Stop
     enum class Measurements : int
     {
-        acc_x,
-        acc_y,
-        acc_z,
         gyr_x,
         gyr_y,
         gyr_z,
+        acc_roll,
+        acc_pitch,
         Measurements_Type_List_Stop,
     };
 

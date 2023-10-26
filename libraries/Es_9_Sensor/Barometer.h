@@ -10,15 +10,15 @@ public:
     // Remember sensor_List_stop
     enum class Sensors : int
     {
-        Baro1,
-        Baro2,
+        baro_1,
+        baro_2,
         Sensor_List_stop,
     };
     // This can be changed to contain all measurements.
     // Remeber Measurments_Type_List_Stop
     enum class Measurements : int
     {
-        altitude,
+        baro_altitude,
         Measurements_Type_List_Stop,
     };
 

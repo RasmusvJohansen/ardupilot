@@ -27,21 +27,25 @@ void IMU::updateMeasurements()
     // Clear out any existing samples from imu and update gyro and accel values from backends
     AP::ins().update();
 
-    // Goes through each senor, and measurement type and update each values with the current measurement.
+    // Goes through each sensor, and measurement type and update each values with the current measurement.
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
         // Get accel and gyro measurements
-        //accel = AP::ins().get_accel(sensor);
-        //gyro = AP::ins().get_gyro(sensor);
-
-        acc = AP::ins().get_accel(sensor);
         gyr = AP::ins().get_gyro(sensor);
+        acc = AP::ins().get_accel(sensor);
 
+        // Start angular velocity measurements
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
-            // Measure acceleration and angular velocity in m/s^2 and rad/s
-            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = (measurement < NrOfAccMeas) ? acc[measurement] : gyr[measurement - NrOfAccMeas]; // here it should get the corresponding measurement for the sensor and measurement type
+            // Measure angular velocity in and rad/s
+            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = gyr[measurement]; // here it should get the corresponding measurement for the sensor and measurement type
         }
+
+        // Calculate roll and pitch in rad
+        // acc.z is negative due to the imus z-axis being positive downwards
+        // acc.x and acc.y are negative to flip roll and pitch direction
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_roll) = atan2f(-acc.y, -acc.z);
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_pitch) = atan2f(-acc.x, -acc.z);
     }
 }
 
@@ -55,10 +59,12 @@ void IMU::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-    //hal.console->printf("X: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x));
-    //hal.console->printf("Y: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y));
-    //hal.console->printf("Z: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z));
+    //hal.console->printf("Roll: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_roll));
+    //hal.console->printf("Pitch: %.2f \n ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_pitch));
+    //hal.console->printf("Z: %.2f \n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z));
     //hal.console->printf("x: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x));
     //hal.console->printf("x: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y));
     //hal.console->printf("x: %.2f\n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
+    //hal.console->printf("Roll: %.2f", atan2f(sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z),sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y))*180.f/M_PIf);
+    //hal.console->printf("Pitch: %.2f\n", atan2f(sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x),sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z))*180.f/M_PIf);
 }

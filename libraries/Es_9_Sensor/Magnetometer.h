@@ -17,9 +17,7 @@ public:
     // Remeber Measurments_Type_List_Stop
     enum class Measurements : int
     {
-        mag_x,
-        mag_y,
-        mag_z,
+        mag_yaw,
         Measurements_Type_List_Stop,
     };
 
@@ -30,11 +28,9 @@ public:
     virtual void loop() override;
 
 private:
-    //Compass magnetometer;
+    float yaw_start_value { 0.f };
 
     Vector3f mag;
-
-    float heading;
 
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
