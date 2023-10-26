@@ -3,7 +3,7 @@
 #include "Es_9_Sensor/Accelerometers.h" 
 #include "Es_9_Sensor/IMU.h"
 #include "Es_9_Sensor/Magnetometer.h"
-//#include "AP_HAL/AP_HAL.h"
+#include "AP_HAL/AP_HAL.h"
 
 class Complementary_Filter
 {
@@ -12,22 +12,23 @@ public:
     
 
 
-    Complementary_Filter(IMU imu, Magnetometer magnetometer);
+    Complementary_Filter(IMU& imu, Magnetometer& magnetometer);
 
     
     
-      
+    
 private:
-    IMU _imu;
-    Magnetometer _magnetometer;
-
+    Magnetometer& _magnetometer;
+  
+    IMU& _imu;
+    
     void updateRoll();
     void updatePitch();
     void updateYaw();
     
     float tau_roll{1}; 
     float tau_pitch{1};
-    float tau_yaw{1};
+    float tau_yaw{0.5};
 
     float Complementary_roll{0};
     float Complementary_pitch{0};
@@ -52,7 +53,7 @@ private:
     float gyro_angular_velocity_accumulation{0.f};
     float sampling_time{0.0f};
 
-    //const AP_HAL::HAL &hal = AP_HAL::get_HAL();
+    const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
 
 };

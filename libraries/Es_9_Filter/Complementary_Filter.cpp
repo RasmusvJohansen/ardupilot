@@ -1,9 +1,8 @@
 #include "Complementary_Filter.h"
 
 
-Complementary_Filter::Complementary_Filter(IMU imu, Magnetometer magnetometer) :_imu{imu}, _magnetometer(magnetometer) 
+Complementary_Filter::Complementary_Filter(IMU& imu, Magnetometer& magnetometer) : _imu{imu}, _magnetometer{magnetometer}
 {  
-
 }
 
 
@@ -12,17 +11,17 @@ Complementary_Filter::Complementary_Filter(IMU imu, Magnetometer magnetometer) :
 
 void Complementary_Filter::loop()
 {
-    //hal.console->printf("testing");
-    //updateRoll();
-    //updatePitch();
-    //updateYaw();
-    //hal.console->printf("roll: %.2f ",Complementary_roll);
+    
+    updateRoll();
+    updatePitch();
+    updateYaw();
+    hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw);
     
 }   
 
 void Complementary_Filter::updateRoll()
 {
-
+    
     //add majority vote or redundancy check to determine which sensor to use. 
 
     //roll is a combination of the accelerometer and gyroscope. 

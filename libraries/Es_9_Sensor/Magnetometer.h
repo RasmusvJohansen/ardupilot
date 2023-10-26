@@ -28,11 +28,19 @@ public:
 
     virtual void loop() override;
 
+    float getTal()
+    {
+        return tal; 
+    }
+
 private:
     float yaw_start_value { 0.f };
 
     Vector3f mag;
 
+
+    float tal;
+    
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
     std::map<Sensors, std::map<Measurements, float>> sensors;
