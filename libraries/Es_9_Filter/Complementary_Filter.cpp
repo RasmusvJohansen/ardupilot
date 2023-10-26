@@ -12,10 +12,11 @@ Complementary_Filter::Complementary_Filter(IMU imu, Magnetometer magnetometer) :
 
 void Complementary_Filter::loop()
 {
-    updateRoll();
-    updatePitch();
-    updateYaw();
-    hal.console->printf("roll: %.2f ",Complementary_roll);
+    //hal.console->printf("testing");
+    //updateRoll();
+    //updatePitch();
+    //updateYaw();
+    //hal.console->printf("roll: %.2f ",Complementary_roll);
     
 }   
 

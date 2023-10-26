@@ -56,6 +56,6 @@ void Magnetometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-    // hal.console->printf("Yaw: %.2f ", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
-    hal.console->printf("Offset: %.2f \n", yaw_start_value);
+    hal.console->printf("Yaw: %.2f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
+    // hal.console->printf("Offset: %.2f \n", yaw_start_value);
 }

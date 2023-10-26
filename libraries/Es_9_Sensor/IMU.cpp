@@ -61,10 +61,4 @@ void IMU::loop()
     updateMeasurements();
     //hal.console->printf("Roll: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_roll));
     //hal.console->printf("Pitch: %.2f \n ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_pitch));
-    //hal.console->printf("Z: %.2f \n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z));
-    //hal.console->printf("x: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x));
-    //hal.console->printf("x: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y));
-    //hal.console->printf("x: %.2f\n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
-    //hal.console->printf("Roll: %.2f", atan2f(sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z),sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y))*180.f/M_PIf);
-    //hal.console->printf("Pitch: %.2f\n", atan2f(sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x),sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z))*180.f/M_PIf);
 }

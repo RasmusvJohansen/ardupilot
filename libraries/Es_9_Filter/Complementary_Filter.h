@@ -3,7 +3,7 @@
 #include "Es_9_Sensor/Accelerometers.h" 
 #include "Es_9_Sensor/IMU.h"
 #include "Es_9_Sensor/Magnetometer.h"
-#include "AP_HAL/AP_HAL.h"
+//#include "AP_HAL/AP_HAL.h"
 
 class Complementary_Filter
 {
@@ -44,7 +44,7 @@ private:
     float filtered_roll_prev{0};
     float filtered_pitch_prev{0};
     float filtered_yaw_prev{0};
-    float Complementary_Period{1.0/400}; 
+    float Complementary_Period{1.0/400.0}; 
 
 
     float IMU_Period = {1.0/400.0};
@@ -52,7 +52,7 @@ private:
     float gyro_angular_velocity_accumulation{0.f};
     float sampling_time{0.0f};
 
-    const AP_HAL::HAL &hal = AP_HAL::get_HAL();
+    //const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
 
 };
