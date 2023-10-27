@@ -19,6 +19,7 @@ void IMU::init()
     AP::ins().init(400);
 
     // Accel calibration in ap_vehicle
+    // Gyro calibration in init(), check in library for how to disable
 }
 
 void IMU::updateMeasurements()
