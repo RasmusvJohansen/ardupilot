@@ -5,7 +5,7 @@ void Magnetometer::init()
     // add every type of measurement to the measurements map
     for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
     {
-        measurements.insert({Magnetometer::Measurements(measurement), 0});
+        measurements.insert({Magnetometer::Measurements(measurement), 0.0});
     }
 
     // add every type of measurment to each sensor.
@@ -30,7 +30,6 @@ void Magnetometer::updateMeasurements()
 {
     // Read compass values and update mag variables
     AP::compass().read();
-
     // Goes through each sensor, and measurement type and update each values with the current measurement.
 
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
@@ -42,6 +41,7 @@ void Magnetometer::updateMeasurements()
         {
             // Calculate yaw in rad
             sensors.at(Magnetometer::Sensors(sensor)).at(Magnetometer::Measurements(measurement)) = atan2f(mag.x, mag.y) - yaw_start_value; // here it should get the corresponding measurement for the sensor and measurement type
+            
         }
     }
 }
@@ -56,6 +56,16 @@ void Magnetometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-    // hal.console->printf("Yaw: %.2f ", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
-    //hal.console->printf("Offset: %.2f \n", yaw_start_value);
+
+    //hal.console->printf("%.2f",tal);
+    //hal.console->printf("Yaw: %.2f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
+    // hal.console->printf("Offset: %.2f \n", yaw_start_value);
 }
+
+/*
+float Magnetometer::getYawStartValue()
+{
+    return yaw_start_value; 
+}
+*/
+

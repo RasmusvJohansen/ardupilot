@@ -22,7 +22,7 @@ void Copter::init_ardupilot()
     sensor_barometer.init();
     sensor_magnetometer.init();
 
-    //------------
+    
 
 #if STATS_ENABLED == ENABLED
     // initialise stats module

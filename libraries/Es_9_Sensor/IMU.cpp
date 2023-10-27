@@ -36,11 +36,11 @@ void IMU::updateMeasurements()
         acc = AP::ins().get_accel(sensor);
 
         // Start angular velocity measurements
-        for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
-        {
-            // Measure angular velocity in and rad/s
-            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = gyr[measurement]; // here it should get the corresponding measurement for the sensor and measurement type
-        }
+        // Measure angular velocity in and rad/s
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_x)]; // here it should get the corresponding measurement for the sensor and measurement type
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = -gyr[static_cast<int>(Measurements::gyr_y)]; // flip rotation around y axis
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_z)];
+
 
         // Calculate roll and pitch in rad
         // acc.z is negative due to the imus z-axis being positive downwards
@@ -62,10 +62,4 @@ void IMU::loop()
     updateMeasurements();
     //hal.console->printf("Roll: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_roll));
     //hal.console->printf("Pitch: %.2f \n ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_pitch));
-    //hal.console->printf("Z: %.2f \n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z));
-    //hal.console->printf("x: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x));
-    //hal.console->printf("x: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y));
-    //hal.console->printf("x: %.2f\n", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
-    //hal.console->printf("Roll: %.2f", atan2f(sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z),sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y))*180.f/M_PIf);
-    //hal.console->printf("Pitch: %.2f\n", atan2f(sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x),sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z))*180.f/M_PIf);
 }
