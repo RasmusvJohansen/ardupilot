@@ -41,20 +41,29 @@ static AP_BoardConfig board_config;
 SITL::SIM sitl;
 #endif
 
-void setup();
-void loop();
+void setup(void);
+void loop(void);
 
 // to be called only once on boot for initializing objects
-void setup()
+void setup(void)
 {
     hal.console->printf("Barometer library test\n");
 
+    hal.scheduler->delay(1000);
+
     board_config.init();
 
-    hal.scheduler->delay(1000);
+    hal.scheduler->delay(5000);
 
     // initialize the barometer
     barometer.init();
+
+    // hal.scheduler->delay(10000);
+
+    hal.console->printf("%d\n", barometer.all_healthy());
+
+    hal.scheduler->delay(5000);
+
     barometer.calibrate();
 
     // set up timer to count time in microseconds
@@ -62,8 +71,9 @@ void setup()
 }
 
 // loop
-void loop()
+void loop(void)
 {
+    hal.console->printf("Test");
     // terminate program if console fails to initialize
     if (!hal.console->is_initialized()) {
         return;

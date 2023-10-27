@@ -109,6 +109,7 @@ SCHED_TASK_CLASS arguments:
  - priority (0 through 255, lower number meaning higher priority)
 
  */
+
 const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // update INS immediately to get current gyro data populated
 
@@ -168,7 +169,15 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     //     SCHED_TASK_CLASS(AP_OpticalFlow,          &copter.optflow,             update,         200, 160,  12),
     // #endif
 
-    SCHED_TASK(update_batt_compass, 10, 120, 15),
+
+    // SCHED_TASK(update_batt_compass, 10, 120, 15),
+
+    // SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
+    SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
+    SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 50, 100, 6),
+    SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 10, 120, 7),
+    SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
+
 
 // Delete if not necessary
 // SCHED_TASK_CLASS(RC_Channels, (RC_Channels*)&copter.g2.rc_channels, read_aux_all,    10,  50,  18), ---------------------------
@@ -229,9 +238,9 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     //     SCHED_TASK_CLASS(AP_RPM,               &copter.rpm_sensor,          update,          40, 200, 129),
     // #endif
 
+
     // Barometer calibration.
     SCHED_TASK_CLASS(AP_TempCalibration, &copter.g2.temp_calibration, update, 10, 100, 135),
-
 };
 
 void Copter::get_scheduler_tasks(const AP_Scheduler::Task *&tasks,
@@ -465,6 +474,7 @@ void Copter::rc_loop()
     read_radio();
     rc().read_mode_switch();
 
+
     if (rc().channel(4)->get_radio_in() > 1500)
     {
         if (!motorController->getIsArmed())
@@ -481,6 +491,7 @@ void Copter::rc_loop()
     }
 
     
+
 }
 
 // throttle_loop - should be run at 50 hz

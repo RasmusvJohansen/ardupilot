@@ -72,7 +72,16 @@
 #include <AC_PrecLand/AC_PrecLand_config.h>
 #include <AP_OpticalFlow/AP_OpticalFlow.h>
 #include <AP_Winch/AP_Winch_config.h>
+
+// Our libaries
+// #include "Es_9_Sensor/Accelerometers.h"
+#include "Es_9_Sensor/IMU.h"
+#include "Es_9_Sensor/Barometer.h"
+#include "Es_9_Sensor/Magnetometer.h"
+#include "Es_9_Filter/Complementary_Filter.h"
 #include <Es_9_Motor/Es_9_Motor.h>
+
+
 // Configuration
 #include "defines.h"
 #include "config.h"
@@ -188,6 +197,7 @@
 class Copter : public AP_Vehicle
 {
 public:
+    // friend class Accelerometers;
     friend class GCS_MAVLINK_Copter;
     friend class GCS_Copter;
     friend class AP_Rally_Copter;
@@ -238,7 +248,7 @@ public:
     friend class AP_ExternalControl_Copter;
 
     Copter(void);
-
+    
 private:
     // key aircraft parameters passed to multiple libraries
     AP_MultiCopter aparm;
@@ -248,6 +258,15 @@ private:
     ParametersG2 g2;
 
     // Create our objects
+
+    // Sensors.
+    IMU sensor_IMU;
+    Barometer sensor_barometer;
+    Magnetometer sensor_magnetometer;
+    
+    // Filters.
+    Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
+    
     Es_9_Motor *motorController = new Es_9_Motor(4);
 
     // used to detect MAVLink acks from GCS to stop compassmot

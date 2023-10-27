@@ -16,6 +16,14 @@ static void failsafe_check_static()
 void Copter::init_ardupilot()
 {
 
+    // Inits are placed here
+    //sensor_accelerometer.init();
+    sensor_IMU.init();
+    sensor_barometer.init();
+    sensor_magnetometer.init();
+
+    
+
 #if STATS_ENABLED == ENABLED
     // initialise stats module
     g2.stats.init();
@@ -46,7 +54,8 @@ void Copter::init_ardupilot()
     // Init RSSI
     rssi.init();
 
-    barometer.init();
+    //barometer.init();
+
 
     // setup telem slots with serial ports
     gcs().setup_uarts();
@@ -107,7 +116,9 @@ void Copter::init_ardupilot()
     gps.init(serial_manager);
 
     AP::compass().set_log_bit(MASK_LOG_COMPASS);
-    AP::compass().init();
+    //AP::compass().init();
+    //hal.scheduler->delay(5000);
+    //hal.console->printf("init done - %u compasses detected\n", compass.get_count());
 
 #if AP_AIRSPEED_ENABLED
     airspeed.set_log_bit(MASK_LOG_IMU);
@@ -151,7 +162,7 @@ void Copter::init_ardupilot()
     // read Baro pressure at ground
     //-----------------------------
     barometer.set_log_baro_bit(MASK_LOG_IMU);
-    barometer.calibrate();
+    //barometer.calibrate();
 
 #if RANGEFINDER_ENABLED == ENABLED
     // initialise rangefinder
@@ -228,7 +239,7 @@ void Copter::startup_INS_ground()
     ahrs.set_vehicle_class(AP_AHRS::VehicleClass::COPTER);
 
     // Warm up and calibrate gyro offsets
-    ins.init(scheduler.get_loop_rate_hz());
+    //ins.init(scheduler.get_loop_rate_hz());
 
     // reset ahrs including gyro bias
     ahrs.reset();
