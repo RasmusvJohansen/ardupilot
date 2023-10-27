@@ -61,6 +61,10 @@ uint16_t Es_9_Motor::convert_float_rads_to_uint_ms(float angular_velocity)
 
 void Es_9_Motor::setAllMotorAngularVelocity(float motorOneAngularVelocity, float motorTwoAngularVelocity, float motorThreeAngularVelocity, float motorFourAngularVelocity)
 {
+    if (!isArmed)
+    {
+        return;
+    }
     uint16_t motorOnePeriod = convert_float_rads_to_uint_ms(motorOneAngularVelocity);
     uint16_t motorTwoPeriod = convert_float_rads_to_uint_ms(motorTwoAngularVelocity);
     uint16_t motorThreePeriod = convert_float_rads_to_uint_ms(motorThreeAngularVelocity);

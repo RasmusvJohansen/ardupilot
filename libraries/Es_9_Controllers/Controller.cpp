@@ -12,7 +12,7 @@ void Controller::loop()
     float torque_pitch = _pid_pitch.calculatePIDOutput(_complementary_filter.getPitch());
     float torque_yaw = _pid_yaw.calculatePIDOutput(_complementary_filter.getYaw());
     // float force = _pid_altitude.calculatePIDOutput(_barometer.getMeasurements().at(Barometer::Sensors::baro_1).at(Barometer::Measurements::baro_altitude));
-    float force { 0 };
+    float force { 0.f };
     float omega_m1 {0.f}; 
     float omega_m2 {0.f};
     float omega_m3 {0.f};
