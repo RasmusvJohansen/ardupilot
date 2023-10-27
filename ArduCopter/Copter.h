@@ -20,7 +20,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 // Header includes
 ////////////////////////////////////////////////////////////////////////////////
-
 #include <cmath>
 #include <stdio.h>
 #include <stdarg.h>
@@ -79,8 +78,10 @@
 #include "Es_9_Sensor/Barometer.h"
 #include "Es_9_Sensor/Magnetometer.h"
 #include "Es_9_Filter/Complementary_Filter.h"
-#include <Es_9_Motor/Es_9_Motor.h>
-
+#include "Es_9_Motor/Es_9_Motor.h"
+#include <array>
+#include "Es_9_Controllers/ES_9_PID.h"
+#include "Es_9_Controllers/Controller.h"
 
 // Configuration
 #include "defines.h"
@@ -267,7 +268,18 @@ private:
     // Filters.
     Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
     
-    Es_9_Motor *motorController = new Es_9_Motor(4);
+    // Actuator
+    Es_9_Motor motorController {4};
+
+    // Controller
+    //  Remove magic numbers when time
+    ES_9_PID pid_roll {2.7f, 0.018f, 2.3f, 1.f/400.f};
+    ES_9_PID pid_pitch {2.7f, 0.018f, 2.3f, 1.f/400.f};
+    ES_9_PID pid_yaw {2.7f, 0.018f, 2.3f, 1.f/40.f};
+    ES_9_PID pid_altitude {2.f, 0.01f, 2.3f, 1.f/80.f};
+
+    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController};
+
 
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;

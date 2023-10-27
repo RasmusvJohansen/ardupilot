@@ -177,6 +177,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 50, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 10, 120, 7),
     SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, loop, 400, 1000, 9),
 
 
 // Delete if not necessary
@@ -477,16 +478,16 @@ void Copter::rc_loop()
 
     if (rc().channel(4)->get_radio_in() > 1500)
     {
-        if (!motorController->getIsArmed())
+        if (!motorController.getIsArmed())
         {
-            motorController->armMotors();
+            motorController.armMotors();
         }
     }
     else if (rc().channel(4)->get_radio_in() < 1500)
     {
-        if (motorController->getIsArmed())
+        if (motorController.getIsArmed())
         {
-            motorController->disarmMotors();
+            motorController.disarmMotors();
         }
     }
 

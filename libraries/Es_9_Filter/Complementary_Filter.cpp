@@ -5,10 +5,6 @@ Complementary_Filter::Complementary_Filter(IMU& imu, Magnetometer& magnetometer)
 {  
 }
 
-
-
-
-
 void Complementary_Filter::loop()
 {
     
@@ -17,7 +13,7 @@ void Complementary_Filter::loop()
     updateYaw();
     hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f wrap: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw,wrap_around);
     
-}   
+}
 
 void Complementary_Filter::updateRoll()
 {
@@ -94,7 +90,21 @@ void Complementary_Filter::updateYaw()
         sampling_time =0.0;
         gyro_angular_velocity_accumulation = 0.0;
         counter = 0.0;
-    }
+    }    
+}
 
-    
+
+float Complementary_Filter::getRoll() const
+{
+    return Complementary_roll;
+}
+
+float Complementary_Filter::getPitch() const
+{
+    return Complementary_roll;
+}
+
+float Complementary_Filter::getYaw() const
+{
+    return Complementary_roll;
 }

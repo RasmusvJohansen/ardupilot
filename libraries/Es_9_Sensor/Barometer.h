@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
 #include "AP_Baro/AP_Baro.h"
