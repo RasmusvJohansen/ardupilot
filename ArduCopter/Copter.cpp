@@ -169,6 +169,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     //     SCHED_TASK_CLASS(AP_OpticalFlow,          &copter.optflow,             update,         200, 160,  12),
     // #endif
 
+
     // SCHED_TASK(update_batt_compass, 10, 120, 15),
 
     // SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
@@ -236,6 +237,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // #if AP_RPM_ENABLED
     //     SCHED_TASK_CLASS(AP_RPM,               &copter.rpm_sensor,          update,          40, 200, 129),
     // #endif
+
 
     // Barometer calibration.
     SCHED_TASK_CLASS(AP_TempCalibration, &copter.g2.temp_calibration, update, 10, 100, 135),
@@ -464,19 +466,32 @@ bool Copter::current_mode_requires_mission() const
 
 // rc_loops - reads user input from transmitter/receiver
 // called at 100hz
+
 void Copter::rc_loop()
 {
-    hal.rcout->force_safety_off();
     // Read radio and 3-position switch on radio
     // -----------------------------------------
     read_radio();
     rc().read_mode_switch();
 
-    // for(int j=0; j < NUM_RC_CHANNELS; j++){
-    //     hal.console->printf("%i | ", rc().channel(j)->get_radio_in());
-    // }
-    // hal.console->printf("%i \n", rc().channel(0)->get_radio_in());
-    // motors->rc_write(0, 2000);
+
+    if (rc().channel(4)->get_radio_in() > 1500)
+    {
+        if (!motorController->getIsArmed())
+        {
+            motorController->armMotors();
+        }
+    }
+    else if (rc().channel(4)->get_radio_in() < 1500)
+    {
+        if (motorController->getIsArmed())
+        {
+            motorController->disarmMotors();
+        }
+    }
+
+    
+
 }
 
 // throttle_loop - should be run at 50 hz

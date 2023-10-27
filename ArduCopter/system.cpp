@@ -56,6 +56,7 @@ void Copter::init_ardupilot()
 
     //barometer.init();
 
+
     // setup telem slots with serial ports
     gcs().setup_uarts();
 
@@ -224,7 +225,7 @@ void Copter::init_ardupilot()
         set_mode(Mode::Number::STABILIZE, ModeReason::UNAVAILABLE);
     }
 
-    // flag that initialisation has completed
+        // flag that initialisation has completed
     ap.initialised = true;
 }
 

@@ -79,8 +79,8 @@
 #include "Es_9_Sensor/Barometer.h"
 #include "Es_9_Sensor/Magnetometer.h"
 #include "Es_9_Filter/Complementary_Filter.h"
+#include <Es_9_Motor/Es_9_Motor.h>
 
-//--------------------
 
 // Configuration
 #include "defines.h"
@@ -258,6 +258,7 @@ private:
     ParametersG2 g2;
 
     // Create our objects
+
     // Sensors.
     IMU sensor_IMU;
     Barometer sensor_barometer;
@@ -266,6 +267,8 @@ private:
     // Filters.
     Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
     
+    Es_9_Motor *motorController = new Es_9_Motor(4);
+
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
 
