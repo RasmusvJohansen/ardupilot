@@ -23,10 +23,10 @@ void Barometer::init()
 void Barometer::updateMeasurements()
 {
     // Accumulates barometer 5 times before
-    AP::baro().accumulate();
+    //AP::baro().accumulate();
     // hal.console->printf("Counter: %d \n", counter);
-    if (counter++ > 4)
-    {
+    //if (counter++ > 4)
+    //{
         counter = 0;
 
         // Call update on all drivers (backend) and push them to frontend
@@ -43,7 +43,7 @@ void Barometer::updateMeasurements()
             }
         }
         //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
-    }
+    //}
 }
 
 std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> Barometer::getMeasurements()
@@ -57,4 +57,5 @@ void Barometer::loop()
     //hal.console->printf("Baro test");
     updateMeasurements();
     //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
+    hal.console->printf("Baro alt: %f \n", AP::baro().get_altitude(0));
 }
