@@ -28,7 +28,7 @@ private:
     
     float tau_roll{1}; 
     float tau_pitch{1};
-    float tau_yaw{0.5};
+    float tau_yaw{1};
 
     float Complementary_roll{0};
     float Complementary_pitch{0};
@@ -52,8 +52,9 @@ private:
     float magnetometer_Period ={1.0/10.0};
     float gyro_angular_velocity_accumulation{0.f};
     float sampling_time{0.0f};
-
+    float gyro = 0.0f;
+    float counter = 0.0f;
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
-
+    float wrap_around{0.f};
 };

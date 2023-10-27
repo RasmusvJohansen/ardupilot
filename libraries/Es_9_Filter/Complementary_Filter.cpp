@@ -15,7 +15,7 @@ void Complementary_Filter::loop()
     updateRoll();
     updatePitch();
     updateYaw();
-    hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw);
+    hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f wrap: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw,wrap_around);
     
 }   
 
@@ -60,16 +60,30 @@ void Complementary_Filter::updatePitch()
 void Complementary_Filter::updateYaw()
 {
     //the magnetometer  is sampled at 10Hz and the gyroscopes are sampled at 400 Hz so the angular velocity is accumulated until measurements from the magnetometer is ready
-    
+    //hal.console->printf("Sampling time: %.4f Yaw: %.2f \n",sampling_time,gyro_angular_velocity_accumulation);
+
     gyro_angular_velocity_accumulation += _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z);
 
-    if(sampling_time <= magnetometer_Period)
+    if(sampling_time < magnetometer_Period)
     {
         sampling_time+= IMU_Period;
+        counter++;
     }
+
     else 
     {
-        filtered_yaw = magnetometer_Period/(magnetometer_Period+2*tau_yaw)*(tau_yaw*gyro_angular_velocity_accumulation + _magnetometer.getMeasurements().at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
+        // Counter to add or subtract 2pi from magnetometer angle when it wraps around
+        if(_magnetometer.getMeasurements().at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw)+ 2*M_PI*wrap_around - Complementary_yaw_prev < - M_PI)
+        {
+            wrap_around++;
+        }
+        else if(_magnetometer.getMeasurements().at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw)+ 2*M_PI*wrap_around - Complementary_yaw_prev > M_PI)
+        {
+            wrap_around--;
+        }
+
+        gyro = gyro_angular_velocity_accumulation/counter;
+        filtered_yaw = magnetometer_Period/(magnetometer_Period+2*tau_yaw)*(tau_yaw*gyro + _magnetometer.getMeasurements().at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw) + 2*M_PI*wrap_around);
 
         Complementary_yaw = filtered_yaw  + filtered_yaw_prev - (magnetometer_Period-2*tau_yaw)/(magnetometer_Period+2*tau_yaw)*Complementary_yaw_prev;
 
@@ -79,6 +93,7 @@ void Complementary_Filter::updateYaw()
 
         sampling_time =0.0;
         gyro_angular_velocity_accumulation = 0.0;
+        counter = 0.0;
     }
 
     

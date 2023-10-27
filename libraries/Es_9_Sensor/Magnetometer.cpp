@@ -30,7 +30,6 @@ void Magnetometer::updateMeasurements()
 {
     // Read compass values and update mag variables
     AP::compass().read();
-    tal = 10.0; 
     // Goes through each sensor, and measurement type and update each values with the current measurement.
 
     for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
@@ -61,3 +60,10 @@ void Magnetometer::loop()
     //hal.console->printf("Yaw: %.2f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
     // hal.console->printf("Offset: %.2f \n", yaw_start_value);
 }
+
+/*
+float Magnetometer::getYawStartValue()
+{
+    return yaw_start_value; 
+}
+*/

@@ -35,11 +35,11 @@ void IMU::updateMeasurements()
         acc = AP::ins().get_accel(sensor);
 
         // Start angular velocity measurements
-        for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
-        {
-            // Measure angular velocity in and rad/s
-            sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements(measurement)) = gyr[measurement]; // here it should get the corresponding measurement for the sensor and measurement type
-        }
+        // Measure angular velocity in and rad/s
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_x)]; // here it should get the corresponding measurement for the sensor and measurement type
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = -gyr[static_cast<int>(Measurements::gyr_y)]; // flip rotation around y axis
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_z)];
+
 
         // Calculate roll and pitch in rad
         // acc.z is negative due to the imus z-axis being positive downwards

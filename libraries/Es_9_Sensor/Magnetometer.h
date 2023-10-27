@@ -1,5 +1,5 @@
-#include "Sensor.h"
 #pragma once
+#include "Sensor.h"
 #include "AP_HAL/AP_HAL.h"
 #include "AP_Compass/AP_Compass.h"
 
@@ -28,18 +28,12 @@ public:
 
     virtual void loop() override;
 
-    float getTal()
-    {
-        return tal; 
-    }
+    //float getYawStartValue();
 
 private:
     float yaw_start_value { 0.f };
 
     Vector3f mag;
-
-
-    float tal;
     
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
