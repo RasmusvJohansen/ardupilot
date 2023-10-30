@@ -24,9 +24,9 @@ private:
     void updatePitch();
     void updateYaw();
     
-    float tau_roll{1.f}; 
-    float tau_pitch{1.f};
-    float tau_yaw{1.f};
+    float tau_roll{.25f}; 
+    float tau_pitch{.25f};
+    float tau_yaw{.25f};
 
     float Complementary_roll{0.f};
     float Complementary_pitch{0.f};

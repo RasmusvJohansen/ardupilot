@@ -69,7 +69,7 @@ void Es_9_Motor::setAllMotorAngularVelocity(float motorOneAngularVelocity, float
     uint16_t motorTwoPeriod = convert_float_rads_to_uint_ms(motorTwoAngularVelocity);
     uint16_t motorThreePeriod = convert_float_rads_to_uint_ms(motorThreeAngularVelocity);
     uint16_t motorFourPeriod = convert_float_rads_to_uint_ms(motorFourAngularVelocity);
-    
+    hal.console->printf("%f | %f | %f | %f | %u | %u | %u | %u \n", motorOneAngularVelocity, motorTwoAngularVelocity, motorThreeAngularVelocity, motorFourAngularVelocity, motorOnePeriod, motorTwoPeriod, motorThreePeriod, motorFourPeriod);
     setPeriod(motorOnePeriod, motorTwoPeriod, motorThreePeriod, motorFourPeriod);
 }
 

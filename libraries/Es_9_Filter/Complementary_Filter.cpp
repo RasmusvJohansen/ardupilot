@@ -11,7 +11,7 @@ void Complementary_Filter::loop()
     updateRoll();
     updatePitch();
     updateYaw();
-    hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f wrap: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw,wrap_around);
+    // hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f wrap: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw,wrap_around);
     
 }
 
@@ -101,10 +101,10 @@ float Complementary_Filter::getRoll() const
 
 float Complementary_Filter::getPitch() const
 {
-    return Complementary_roll;
+    return Complementary_pitch;
 }
 
 float Complementary_Filter::getYaw() const
 {
-    return Complementary_roll;
+    return Complementary_yaw;
 }

@@ -21,5 +21,7 @@ private:
     ES_9_PID& _pid_yaw;
     ES_9_PID& _pid_altitude;
     MotorMixing motor_mixing;
-    Es_9_Motor _motorController;
+    Es_9_Motor& _motorController;
+
+    float input_linearisation_rads { 337.67f };
 };
