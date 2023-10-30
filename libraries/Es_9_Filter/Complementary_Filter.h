@@ -47,7 +47,7 @@ private:
 
 
     float IMU_Period = {1.f/400.f};
-    float magnetometer_Period ={1.f/10.f};
+    float magnetometer_Period ={1.f/40.f};
     float gyro_angular_velocity_accumulation{0.f};
     float sampling_time{0.0f};
     float gyro = 0.0f;
