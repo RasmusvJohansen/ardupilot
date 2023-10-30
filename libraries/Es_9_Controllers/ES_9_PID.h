@@ -8,10 +8,10 @@ public:
     ES_9_PID(float Kp, float Ki, float Kd, float TS);
     float calculatePIDOutput(float new_measurement);
     void setReference(float new_reference);
+    float getReference() const;
 
 private:
     float input_reference { 0.f };
-    const float max_allowed_reference_rad { 0.4f };
 
     const float kp { 0.f };
     const float ki { 0.f };

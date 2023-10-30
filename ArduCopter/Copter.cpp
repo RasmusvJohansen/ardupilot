@@ -491,8 +491,29 @@ void Copter::rc_loop()
         }
     }
 
-    
+    if (rc().channel(2)->get_radio_in() > 1500)
+    {
+        pid_altitude.setReference(pid_altitude.getReference() + 0.1f/400.f);
+    }
+    else if (rc().channel(2)->get_radio_in() < 1500)
+    {
+        pid_altitude.setReference(pid_altitude.getReference() - 0.1f/400.f);
+    }
 
+    float input_scale { (40.f * (M_PI)/ 180.f) / 1000.f };
+    float input_offset { 1500.f * input_scale };
+
+    int16_t rc_in_roll = rc().channel(0)->get_radio_in();
+    pid_roll.setReference(rc_in_roll * input_scale - input_offset);
+
+    int16_t rc_in_pitch = rc().channel(1)->get_radio_in();
+    pid_pitch.setReference(rc_in_pitch * input_scale - input_offset);
+
+    int16_t rc_in_yaw = rc().channel(3)->get_radio_in();
+    pid_yaw.setReference(rc_in_yaw * input_scale - input_offset);
+
+
+    hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());
 }
 
 // throttle_loop - should be run at 50 hz
