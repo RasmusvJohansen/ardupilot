@@ -23,27 +23,23 @@ void Barometer::init()
 void Barometer::updateMeasurements()
 {
     // Accumulates barometer 5 times before
-    AP::baro().accumulate();
+    //AP::baro().accumulate();
     // hal.console->printf("Counter: %d \n", counter);
-    if (counter++ > 4)
+
+    // Call update on all drivers (backend) and push them to frontend
+    AP::baro().update();
+
+    // Goes through each sensor, and measurement type and update each values with the current measurement.
+
+    for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
     {
-        counter = 0;
-
-        // Call update on all drivers (backend) and push them to frontend
-        AP::baro().update();
-
-        // Goes through each sensor, and measurement type and update each values with the current measurement.
-
-        for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
+        for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
-            for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
-            {
-                // Measure altitude in meters
-                sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = AP::baro().get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
-            }
+            // Measure altitude in meters
+            sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = AP::baro().get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
         }
-        //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
     }
+    //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
 }
 
 std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> Barometer::getMeasurements()
