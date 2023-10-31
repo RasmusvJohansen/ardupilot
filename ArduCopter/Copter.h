@@ -80,6 +80,7 @@
 #include "Es_9_Sensor/Magnetometer.h"
 #include "Es_9_Filter/Complementary_Filter.h"
 #include <Es_9_Motor/Es_9_Motor.h>
+#include "Es_9_Filter/SEKF.h"
 
 
 // Configuration
