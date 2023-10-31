@@ -22,9 +22,6 @@ void Barometer::init()
 
 void Barometer::updateMeasurements()
 {
-    // Accumulates barometer 5 times before
-    //AP::baro().accumulate();
-    // hal.console->printf("Counter: %d \n", counter);
 
     // Call update on all drivers (backend) and push them to frontend
     AP::baro().update();
@@ -39,7 +36,6 @@ void Barometer::updateMeasurements()
             sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = AP::baro().get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
         }
     }
-    //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
 }
 
 std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> Barometer::getMeasurements()
@@ -50,7 +46,6 @@ std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> Barometer
 void Barometer::loop()
 {
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
-    //hal.console->printf("Baro test");
     updateMeasurements();
     //hal.console->printf("Baro alt: %f \n", sensors.at(Barometer::Sensors::Baro2).at(Barometer::Measurements::altitude));
 }

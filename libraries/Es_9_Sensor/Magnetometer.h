@@ -28,8 +28,6 @@ public:
 
     virtual void loop() override;
 
-    //float getYawStartValue();
-
 private:
     float yaw_start_value { 0.f };
 
