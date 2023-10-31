@@ -69,12 +69,17 @@ void Es_9_Motor::setAllMotorAngularVelocity(float motorOneAngularVelocity, float
     uint16_t motorTwoPeriod = convert_float_rads_to_uint_ms(motorTwoAngularVelocity);
     uint16_t motorThreePeriod = convert_float_rads_to_uint_ms(motorThreeAngularVelocity);
     uint16_t motorFourPeriod = convert_float_rads_to_uint_ms(motorFourAngularVelocity);
-    hal.console->printf("%f | %f | %f | %f | %u | %u | %u | %u \n", motorOneAngularVelocity, motorTwoAngularVelocity, motorThreeAngularVelocity, motorFourAngularVelocity, motorOnePeriod, motorTwoPeriod, motorThreePeriod, motorFourPeriod);
+    
     setPeriod(motorOnePeriod, motorTwoPeriod, motorThreePeriod, motorFourPeriod);
 }
 
 void Es_9_Motor::setPeriod(uint16_t period)
 {
+    if (period < minPeriod)
+    {
+        period = minPeriod;
+    }
+    
     hal.rcout->cork();
     for (int i = 0; i <= numMotors; i++)
     {
@@ -84,6 +89,23 @@ void Es_9_Motor::setPeriod(uint16_t period)
 }
 void Es_9_Motor::setPeriod(uint16_t periodMotorOne, uint16_t periodMotorTwo, uint16_t periodMotorThree, uint16_t periodMotorFour)
 {
+    if (periodMotorOne < minPeriod)
+    {
+        periodMotorOne = minPeriod;
+    }
+    if (periodMotorTwo < minPeriod)
+    {
+        periodMotorTwo = minPeriod;
+    }
+    if (periodMotorThree < minPeriod)
+    {
+        periodMotorThree = minPeriod;
+    }
+    if (periodMotorFour < minPeriod)
+    {
+        periodMotorFour = minPeriod;
+    }
+    
     hal.rcout->cork();
     hal.rcout->write(0, periodMotorOne);
     hal.rcout->write(1, periodMotorTwo);

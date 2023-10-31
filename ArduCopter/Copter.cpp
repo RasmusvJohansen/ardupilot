@@ -491,6 +491,11 @@ void Copter::rc_loop()
         }
     }
 
+    if(!motorController.getIsArmed())
+    {
+        return;
+    }
+
     if (rc().channel(2)->get_radio_in() > 1500)
     {
         pid_altitude.setReference(pid_altitude.getReference() + 0.1f/400.f);
@@ -513,7 +518,7 @@ void Copter::rc_loop()
     pid_yaw.setReference(rc_in_yaw * input_scale - input_offset);
 
 
-    hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());
+    // hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());
 }
 
 // throttle_loop - should be run at 50 hz

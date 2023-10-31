@@ -25,6 +25,9 @@ void Controller::loop()
     float omega_m3 { 0.f };
     float omega_m4 { 0.f };
     std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(torque_roll, torque_pitch, torque_yaw, force);
+    
+    hal.console->printf("%f\n", _barometer.getMeasurements().at(Barometer::Sensors::baro_1).at(Barometer::Measurements::baro_altitude));
+    // hal.console->printf("F: %f| TR: %f| TP: %f| TY: %f| m1 %f| m2 %f| m3 %f| m4 %f|",force, torque_roll,torque_pitch, torque_yaw, omega_m1,omega_m2, omega_m3, omega_m4);
 
     _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
 }
