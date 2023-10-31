@@ -1135,6 +1135,24 @@ bool GCS_MAVLINK_Copter::sane_vel_or_acc_vector(const Vector3f &vec) const
 
 void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
 {
+    if(msg.sysid == 255)
+    {
+        hal.console->printf("New Data of length %u payload length: %u :\n ",msg.len,sizeof(msg.payload64));
+
+        // _MAV_RETURN_float_array(&msg, q, 4,  4)
+        // hal.console->printf()
+        
+        hal.console->printf("%f|",_MAV_RETURN_float(&msg,  0));
+        // hal.console->printf("%f",_MAV_RETURN_float(&msg,  4));
+        // for (size_t i = 0; i < 4; i++)
+        // {
+        //     // _MAV_RETURN_uint16_t(&msg,  0);
+        //     // hal.console->printf("%llu", msg.payload64[i]);
+        //     // hal.console->printf("%f\n",_MAV_RETURN_float(&msg,  i));
+        // }
+        hal.console->printf("\n");
+    }
+
 #if MODE_GUIDED_ENABLED == ENABLED
     // for mavlink SET_POSITION_TARGET messages
     constexpr uint32_t MAVLINK_SET_POS_TYPE_MASK_POS_IGNORE =
