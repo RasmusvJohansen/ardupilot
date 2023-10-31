@@ -1133,23 +1133,77 @@ bool GCS_MAVLINK_Copter::sane_vel_or_acc_vector(const Vector3f &vec) const
     return true;
 }
 
+typedef struct __mavlink_data16_t_es_9 {
+ uint8_t type; /*<  Data type.*/
+ uint8_t len; /*< [bytes] Data length.*/
+ float data[4]; /*<  Raw data.*/
+} mavlink_data16_t_es_9;
+
+
+static inline uint16_t mavlink_msg_data16_get_data_float(const mavlink_message_t* msg, float *data)
+{
+    return _MAV_RETURN_float_array(msg, data, 4,  2);
+}
+
+
+static inline void mavlink_msg_data16_decode_float(const mavlink_message_t* msg, mavlink_data16_t_es_9* data16)
+{
+    data16->type = mavlink_msg_data16_get_type(msg);
+    data16->len = mavlink_msg_data16_get_len(msg);
+    mavlink_msg_data16_get_data_float(msg, data16->data);
+}
+
+// /**
+//  * @brief Get field type from data96 message
+//  *
+//  * @return  Data type.
+//  */
+// static inline uint8_t mavlink_msg_data16_get_type(const mavlink_message_t* msg)
+// {
+//     return _MAV_RETURN_uint8_t(msg,  0);
+// }
+
+// /**
+//  * @brief Get field len from data96 message
+//  *
+//  * @return [bytes] Data length.
+//  */
+// static inline uint8_t mavlink_msg_data16_get_len(const mavlink_message_t* msg)
+// {
+//     return _MAV_RETURN_uint8_t(msg,  1);
+// }
+
+// /**
+//  * @brief Get field data from data96 message
+//  *
+//  * @return  Raw data.
+//  */
+
+
 void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
 {
     if(msg.sysid == 255)
     {
+        // float posi[4];
         hal.console->printf("New Data of length %u payload length: %u :\n ",msg.len,sizeof(msg.payload64));
 
         // _MAV_RETURN_float_array(&msg, q, 4,  4)
         // hal.console->printf()
+
+        mavlink_data16_t_es_9 m;
+        mavlink_msg_data16_decode_float(&msg, &m);
+
+        // _MAV_RETURN_float_array(&msg, posi, 4,  4);
         
-        hal.console->printf("%f|",_MAV_RETURN_float(&msg,  0));
+        // hal.console->printf("%f|",_MAV_RETURN_float(&msg,  0));
         // hal.console->printf("%f",_MAV_RETURN_float(&msg,  4));
-        // for (size_t i = 0; i < 4; i++)
-        // {
-        //     // _MAV_RETURN_uint16_t(&msg,  0);
-        //     // hal.console->printf("%llu", msg.payload64[i]);
-        //     // hal.console->printf("%f\n",_MAV_RETURN_float(&msg,  i));
-        // }
+        for (size_t i = 0; i < 4; i++)
+        {
+            hal.console->printf("%f |", m.data[i]);
+            // _MAV_RETURN_uint16_t(&msg,  0);
+            // hal.console->printf("%llu", msg.payload64[i]);
+            // hal.console->printf("%f\n",_MAV_RETURN_float(&msg,  i));
+        }
         hal.console->printf("\n");
     }
 
