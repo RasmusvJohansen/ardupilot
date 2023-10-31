@@ -16,14 +16,12 @@ void Magnetometer::init()
 
     // Init sensors here
     // ahrs and compass init in system.cpp line 118
-    //magnetometer.set_log_bit(1<<13);
     AP::compass().init();
 
     // Create offset for yaw, so we always start at 0 yaw
     AP::compass().read();
     mag = AP::compass().get_field(static_cast<int>(Sensors::Mag1));
     yaw_start_value = atan2f(mag.x, mag.y);
-    hal.scheduler->delay(100);
 }
 
 void Magnetometer::updateMeasurements()
@@ -56,16 +54,6 @@ void Magnetometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-
-    //hal.console->printf("%.2f",tal);
     //hal.console->printf("Yaw: %.2f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
     // hal.console->printf("Offset: %.2f \n", yaw_start_value);
 }
-
-/*
-float Magnetometer::getYawStartValue()
-{
-    return yaw_start_value; 
-}
-*/
-
