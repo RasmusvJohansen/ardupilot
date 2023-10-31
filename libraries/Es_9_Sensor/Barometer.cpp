@@ -16,8 +16,11 @@ void Barometer::init()
 
     // Init sensors here
     // Init and calibration in system.cpp (search for barometer)
+    hal.scheduler->delay(2000);
     AP::baro().init();
+    hal.scheduler->delay(2000);
     AP::baro().calibrate();
+    hal.scheduler->delay(2000);
 }
 
 void Barometer::updateMeasurements()

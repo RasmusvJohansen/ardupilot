@@ -56,7 +56,7 @@ void Magnetometer::loop()
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
-    hal.console->printf("x: %.2f y: %.2f z: %.2f yaw: %.2f \n",mag.x,mag.y,mag.z,atan2f(mag.x, mag.y));
+    //hal.console->printf("x: %.2f y: %.2f z: %.2f yaw: %.2f \n",mag.x,mag.y,mag.z,atan2f(mag.x, mag.y));
 
 
     //hal.console->printf("%.2f",tal);
