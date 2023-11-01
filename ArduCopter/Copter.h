@@ -83,6 +83,9 @@
 #include "Es_9_Controllers/ES_9_PID.h"
 #include "Es_9_Controllers/Controller.h"
 
+#include "Es_9_Sensor/GPS_fake.h"
+
+
 // Configuration
 #include "defines.h"
 #include "config.h"
@@ -264,6 +267,7 @@ private:
     IMU sensor_IMU;
     Barometer sensor_barometer;
     Magnetometer sensor_magnetometer;
+    GPS_fake sensor_gps_fake;
     
     // Filters.
     Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
@@ -279,6 +283,11 @@ private:
     ES_9_PID pid_altitude {2.f, 0.01f, 2.3f, 1.f/80.f};
 
     Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController};
+
+
+    
+    //functions should be reworked in the future to a better structure 
+    void Send_Battery_To_Radio(void);
 
 
     // used to detect MAVLink acks from GCS to stop compassmot

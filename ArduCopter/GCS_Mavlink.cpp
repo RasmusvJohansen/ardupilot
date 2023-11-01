@@ -1133,8 +1133,36 @@ bool GCS_MAVLINK_Copter::sane_vel_or_acc_vector(const Vector3f &vec) const
     return true;
 }
 
+
+
+typedef struct __mavlink_data16_float {
+ uint8_t type;
+ uint8_t len;
+ float data[4];
+} mavlink_data16_float;
+
+static inline uint16_t mavlink_msg_data16_get_data_float(const mavlink_message_t* msg, float *data)
+{
+    return _MAV_RETURN_float_array(msg, data, 4,  2);
+}
+
+static inline void mavlink_msg_data16_decode_float(const mavlink_message_t* msg, mavlink_data16_float* data16)
+{
+    data16->type = mavlink_msg_data16_get_type(msg);
+    data16->len = mavlink_msg_data16_get_len(msg);
+    mavlink_msg_data16_get_data_float(msg, data16->data);
+}
+
 void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
 {
+    if(msg.msgid == MAVLINK_MSG_ID_DATA16)
+    {
+        mavlink_data16_float m;
+        mavlink_msg_data16_decode_float(&msg, &m);
+
+        copter.sensor_gps_fake.setPosition(m.data[0], m.data[1], m.data[2]);
+    }
+
 #if MODE_GUIDED_ENABLED == ENABLED
     // for mavlink SET_POSITION_TARGET messages
     constexpr uint32_t MAVLINK_SET_POS_TYPE_MASK_POS_IGNORE =
