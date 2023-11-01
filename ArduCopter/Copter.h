@@ -269,6 +269,11 @@ private:
     
     Es_9_Motor *motorController = new Es_9_Motor(4);
 
+    
+    //functions should be reworked in the future to a better structure 
+    void Send_Battery_To_Radio(void);
+
+
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
 
