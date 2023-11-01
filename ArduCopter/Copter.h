@@ -80,6 +80,7 @@
 #include "Es_9_Sensor/Magnetometer.h"
 #include "Es_9_Filter/Complementary_Filter.h"
 #include <Es_9_Motor/Es_9_Motor.h>
+#include "Es_9_Sensor/GPS_fake.h"
 
 
 // Configuration
@@ -263,6 +264,7 @@ private:
     IMU sensor_IMU;
     Barometer sensor_barometer;
     Magnetometer sensor_magnetometer;
+    GPS_fake sensor_gps_fake;
     
     // Filters.
     Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
