@@ -551,12 +551,7 @@ void Copter::throttle_loop()
 
 void Copter::Send_Battery_To_Radio(void)
 {
-
     battery.read();
-        
-    hal.console->printf("voltage: %.2f",battery.voltage(0)); 
-    hal.console->write("Hello");
-
 }
 
 
