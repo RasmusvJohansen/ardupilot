@@ -179,6 +179,8 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
 
 
+    SCHED_TASK(Send_Battery_To_Radio,10,100,99),
+
 // Delete if not necessary
 // SCHED_TASK_CLASS(RC_Channels, (RC_Channels*)&copter.g2.rc_channels, read_aux_all,    10,  50,  18), ---------------------------
 
@@ -519,6 +521,19 @@ void Copter::throttle_loop()
 
 // update_batt_compass - read battery and compass
 // should be called at 10hz
+
+void Copter::Send_Battery_To_Radio(void)
+{
+
+    battery.read();
+        
+    hal.console->printf("voltage: %.2f",battery.voltage(0)); 
+    hal.console->write("Hello");
+
+}
+
+
+
 void Copter::update_batt_compass(void)
 {
     // read battery before compass because it may be used for motor interference compensation
