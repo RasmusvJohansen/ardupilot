@@ -280,9 +280,9 @@ private:
     ES_9_PID pid_roll {2.7f, 0.018f, 2.3f, 1.f/400.f};
     ES_9_PID pid_pitch {2.7f, 0.018f, 2.3f, 1.f/400.f};
     ES_9_PID pid_yaw {2.7f, 0.018f, 2.3f, 1.f/40.f};
-    ES_9_PID pid_altitude {2.f, 0.01f, 2.3f, 1.f/80.f};
+    ES_9_PID pid_altitude {2.f, 0.01f, 2.3f, 1.f/30.f};
 
-    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController};
+    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController,sensor_gps_fake};
 
 
     

@@ -10,7 +10,7 @@
 class Es_9_Motor
 {
 private:
-    bool isArmed;
+    bool isArmed{false};
     uint8_t numMotors;
     uint16_t minPeriod { 1000 };
     uint16_t maxPeriod { 1000 };
