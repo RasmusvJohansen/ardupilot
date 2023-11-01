@@ -493,6 +493,15 @@ void Copter::rc_loop()
         }
     }
 
+    if(rc().channel(7)->get_radio_in() > 1500)
+    {
+        if(motorController.getIsArmed())
+        {
+            motorController.setIsFlying(true);
+        }
+    }
+
+
     if(!motorController.getIsArmed())
     {
         return;

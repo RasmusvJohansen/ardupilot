@@ -23,8 +23,10 @@ void Es_9_Motor::armMotors()
 
     // decrease to finish arming.
     setPeriod(minPeriod);
-    hal.scheduler->delay(1000);  //OBS on this, might need to be deleted
+    hal.scheduler->delay(100);  //OBS on this, might need to be deleted
     isArmed = true;
+    setPeriod(1050);
+    hal.scheduler->delay(1000);
 }
 void Es_9_Motor::disarmMotors()
 {
@@ -35,6 +37,7 @@ void Es_9_Motor::disarmMotors()
     }
     hal.rcout->force_safety_on();
     isArmed = false;
+    isFlying = false; 
 }
 
 void Es_9_Motor::setAllMotorPeriod(uint16_t periodMotorOne, uint16_t periodMotorTwo, uint16_t periodMotorThree, uint16_t periodMotorFour)
@@ -117,4 +120,19 @@ void Es_9_Motor::setPeriod(uint16_t periodMotorOne, uint16_t periodMotorTwo, uin
 bool Es_9_Motor::getIsArmed() const
 {
     return isArmed;
+}
+
+bool Es_9_Motor::getIsFlying() const
+{
+    return isFlying;
+}
+
+void Es_9_Motor::testMotors() 
+{
+    setPeriod(1050);
+}
+
+void Es_9_Motor::setIsFlying(bool Flying_state)
+{
+    isFlying = Flying_state;
 }
