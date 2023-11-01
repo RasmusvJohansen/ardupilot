@@ -174,9 +174,10 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 
     // SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
     SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
-    SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 50, 100, 6),
-    SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 10, 120, 7),
+    SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 80, 100, 6),
+    SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 40, 120, 7),
     SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, loop, 400, 5000, 9),
 
 
     SCHED_TASK(Send_Battery_To_Radio,10,100,99),
@@ -479,21 +480,47 @@ void Copter::rc_loop()
 
     if (rc().channel(4)->get_radio_in() > 1500)
     {
-        if (!motorController->getIsArmed())
+        if (!motorController.getIsArmed())
         {
-            motorController->armMotors();
+            motorController.armMotors();
         }
     }
     else if (rc().channel(4)->get_radio_in() < 1500)
     {
-        if (motorController->getIsArmed())
+        if (motorController.getIsArmed())
         {
-            motorController->disarmMotors();
+            motorController.disarmMotors();
         }
     }
 
-    
+    if(!motorController.getIsArmed())
+    {
+        return;
+    }
 
+    if (rc().channel(2)->get_radio_in() > 1500)
+    {
+        pid_altitude.setReference(pid_altitude.getReference() + 0.1f/400.f);
+    }
+    else if (rc().channel(2)->get_radio_in() < 1500)
+    {
+        pid_altitude.setReference(pid_altitude.getReference() - 0.1f/400.f);
+    }
+
+    float input_scale { (40.f * (M_PI)/ 180.f) / 1000.f };
+    float input_offset { 1500.f * input_scale };
+
+    int16_t rc_in_roll = rc().channel(0)->get_radio_in();
+    pid_roll.setReference(rc_in_roll * input_scale - input_offset);
+
+    int16_t rc_in_pitch = rc().channel(1)->get_radio_in();
+    pid_pitch.setReference(rc_in_pitch * input_scale - input_offset);
+
+    int16_t rc_in_yaw = rc().channel(3)->get_radio_in();
+    pid_yaw.setReference(rc_in_yaw * input_scale - input_offset);
+
+
+    // hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());
 }
 
 // throttle_loop - should be run at 50 hz

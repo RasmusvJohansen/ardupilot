@@ -38,8 +38,6 @@ private:
     Vector3f acc;
     Vector3f gyr;
 
-    int NrOfAccMeas{ 3 }; // noget
-
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 
     std::map<Sensors, std::map<Measurements, float>> sensors;
