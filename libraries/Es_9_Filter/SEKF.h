@@ -1,30 +1,47 @@
-
-
+#include "AP_Math/vectorN.h"
+#include "AP_Math/matrixN.h"
 
 
 class SEKF
 {
-private:
-    /* Skriv variabler, matricer, vektorer og funktioner her */
-    float x[12][1] = {{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12}};
-    float y[4][1] = {{1},{2},{3},{4}};
-    float v[4][1] = {{1},{2},{3},{4}};
-
-    float k[12][4] = {{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4},{1,2,3,4}};
-    float H[12][12] = {{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},};
-    float P[12][12] = {{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},{1,2,3,4,5,6,7,8,9,10,11,12},};
-    float I[3][3] = {{1,0,0},{0,1,0},{0,0,1}};
-
-    void kalmanGain ()
-    {
-        for(int n = 1; n < 13; n++)
-        {
-            k[n] = 
-        }
-    }
-
 public:
     /* Skriv funktioner som viser værdier */
+
+
+private:
+    /* Skriv variabler, matricer, vektorer og funktioner her */
+    static const int num_of_states{12};
+
+    VectorN<float,num_of_states>k;
+    VectorN<float,num_of_states>y;
+    VectorN<float,num_of_states>y_est;
+    VectorN<float,num_of_states>x;
+    VectorN<float,num_of_states>prev_x;
+
+    //MatrixN<float,12>p;
+    //MatrixN<float,12>h;
+
+    float identity[num_of_states][num_of_states]; //Rember at denne skal laves til en identitets matrix på et tidspunkt
+    float p[num_of_states][num_of_states];
+    float prev_p[num_of_states][num_of_states]; //Denne skal starte med værdier da den er initial estiamte eller noget til at starte med
+    float h[num_of_states][num_of_states];
+    float r[num_of_states][num_of_states];
+
+
+    void calculateKalmanGain()
+    {
+
+    }
+
+    void calculateStateEstimate()
+    {
+
+    }
+
+    void calculateErrorCovariance()
+    {
+
+    }
 
 
 };
