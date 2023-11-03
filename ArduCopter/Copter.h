@@ -270,6 +270,8 @@ private:
     
     Es_9_Motor *motorController = new Es_9_Motor(4);
 
+
+    SEKF KalmanFilter;
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
 

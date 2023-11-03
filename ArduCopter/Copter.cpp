@@ -179,6 +179,8 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
 
 
+    SCHED_TASK_CLASS(SEKF,&copter.KalmanFilter,calculateStateEstimate,1,1000,9),
+
 // Delete if not necessary
 // SCHED_TASK_CLASS(RC_Channels, (RC_Channels*)&copter.g2.rc_channels, read_aux_all,    10,  50,  18), ---------------------------
 
