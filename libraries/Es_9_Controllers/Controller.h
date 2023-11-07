@@ -7,6 +7,7 @@
 #include "Es_9_Motor/Es_9_Motor.h"
 #include "Es_9_Sensor/GPS_fake.h"
 #include "Es_9_Sensor/fake_measurement.h"
+
 #include <tuple>
 
 class Controller
@@ -18,6 +19,7 @@ public:
 private:
     Complementary_Filter& _complementary_filter;
     Barometer& _barometer;
+    
     ES_9_PID& _pid_roll;
     ES_9_PID& _pid_pitch;
     ES_9_PID& _pid_yaw;
