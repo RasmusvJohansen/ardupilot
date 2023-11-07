@@ -17,7 +17,7 @@ private:
     const float ki { 0.f };
     const float kd { 0.f };
     const float Ts { 0.f };
-    const float N { 100.f };
+    const float N { 20.f };
 
     const float term1Scale {((4.f+2.f*N*Ts)*kp + (2.f*Ts+N*powf(Ts,2.f))*ki + 4.f*N*kd) / (4.f+2.f*N*Ts)};
     const float term2Scale {(-8.f*kp+2.f*N*powf(Ts,2.f)*ki-8.f*N*kd) / (4.f+2.f*N*Ts)};

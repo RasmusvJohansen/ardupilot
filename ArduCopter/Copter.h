@@ -84,6 +84,7 @@
 #include "Es_9_Controllers/Controller.h"
 
 #include "Es_9_Sensor/GPS_fake.h"
+#include "Es_9_Sensor/fake_measurement.h"
 
 
 // Configuration
@@ -268,6 +269,8 @@ private:
     Barometer sensor_barometer;
     Magnetometer sensor_magnetometer;
     GPS_fake sensor_gps_fake;
+    fake_measurement sensor_fake;
+    
     
     // Filters.
     Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
@@ -277,12 +280,12 @@ private:
 
     // Controller
     //  Remove magic numbers when time
-    ES_9_PID pid_roll {2.7f, 0.018f, 2.3f, 1.f/400.f};
-    ES_9_PID pid_pitch {2.7f, 0.018f, 2.3f, 1.f/400.f};
-    ES_9_PID pid_yaw {2.7f, 0.018f, 2.3f, 1.f/40.f};
-    ES_9_PID pid_altitude {2.f, 0.01f, 2.3f, 1.f/30.f};
+    ES_9_PID pid_roll {90.f, 40.f, 80.f, 1.f/75.f};
+    ES_9_PID pid_pitch {90.f, 40.f, 80.f, 1.f/75.f};
+    ES_9_PID pid_yaw {2.7f, 0.018f, 0.f, 1.f/30.f};
+    ES_9_PID pid_altitude {2.f, 0.01f, 0.f, 1.f/30.f};
 
-    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController,sensor_gps_fake};
+    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController,sensor_gps_fake, sensor_fake};
 
 
     

@@ -1160,7 +1160,8 @@ void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
         mavlink_data16_float m;
         mavlink_msg_data16_decode_float(&msg, &m);
 
-        copter.sensor_gps_fake.setPosition(m.data[0], m.data[1], m.data[2]);
+        copter.sensor_fake.setMeasurement(m.data[0], m.data[1], m.data[2], m.data[3]);
+        // copter.sensor_gps_fake.setPosition(m.data[0], m.data[1], m.data[2]);
     }
 
 #if MODE_GUIDED_ENABLED == ENABLED

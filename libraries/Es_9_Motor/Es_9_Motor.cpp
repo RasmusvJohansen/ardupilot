@@ -17,16 +17,17 @@ void Es_9_Motor::armMotors()
         hal.rcout->enable_ch(i);
     }
 
+    setPeriod(minPeriod);
+    hal.scheduler->delay(500);
+
     // ramp up motor to start sequence
     setPeriod(armPeriod);
     hal.scheduler->delay(500);
 
     // decrease to finish arming.
     setPeriod(minPeriod);
-    hal.scheduler->delay(100);  //OBS on this, might need to be deleted
+    hal.scheduler->delay(500);  //OBS on this, might need to be deleted
     isArmed = true;
-    setPeriod(1050);
-    hal.scheduler->delay(1000);
 }
 void Es_9_Motor::disarmMotors()
 {

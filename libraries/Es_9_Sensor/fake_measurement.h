@@ -1,0 +1,15 @@
+#pragma once
+
+#include <array>
+#include <tuple>
+
+class fake_measurement
+{
+public:
+
+    std::tuple<float, float, float, float> getMeasurement() const;
+    void setMeasurement(float roll, float pitch, float yaw, float Altitude);
+private:
+    std::array<float, 3> attitude { 0.f };
+    float altitude { 0.f };
+};
