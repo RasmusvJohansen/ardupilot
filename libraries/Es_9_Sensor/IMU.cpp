@@ -38,8 +38,8 @@ void IMU::updateMeasurements()
         // Start angular velocity measurements
         // Measure angular velocity in and rad/s
         sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_x)]; // here it should get the corresponding measurement for the sensor and measurement type
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = -gyr[static_cast<int>(Measurements::gyr_y)]; // flip rotation around y axis
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_z)];
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_y) = -gyr[static_cast<int>(Measurements::gyr_y)]; // flip rotation around y axis
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_z) = gyr[static_cast<int>(Measurements::gyr_z)];
 
 
         // Calculate roll and pitch in rad

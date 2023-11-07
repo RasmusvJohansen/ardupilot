@@ -3,14 +3,65 @@
 #include <AP_HAL/AP_HAL.h>
 extern const AP_HAL::HAL &hal;
 
-Controller::Controller(Complementary_Filter& complementary_filter, Barometer& barometer, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_altitude, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement) :
-    _complementary_filter{ complementary_filter }, _barometer{ barometer }, _pid_roll{ pid_roll }, _pid_pitch{ pid_pitch }, _pid_yaw{ pid_yaw }, _pid_altitude{ pid_altitude }, _motorController{ motor_controller }, _gps{ gps }, _fake_measurement { fake_measurement }
+Controller::Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_altitude) :
+    _complementary_filter{ complementary_filter }, _imu{ imu }, _barometer{ barometer }, _motorController{ motor_controller }, _gps{ gps }, _fake_measurement { fake_measurement }, _pid_roll_angularRate{ pid_roll_angularRate }, _pid_pitch_angularRate{ pid_pitch_angularRate }, _pid_yaw_angularRate{ pid_yaw_angularRate }, _pid_roll{ pid_roll }, _pid_pitch{ pid_pitch }, _pid_yaw{ pid_yaw }, _pid_altitude{ pid_altitude }
 {
 
 }
 
+void Controller::InnerLoop()
+{
+    if(!runController())
+    {
+        return;
+    }
+    float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
+    std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
 
-void Controller::loop()
+    u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
+    u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
+    u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
+
+    // hal.console->printf("Body: %f | %f | %f | Inertial: %f | %f | %f \n",_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z),interial_rate_roll, interial_rate_pitch, interial_rate_yaw);
+
+    adjustOutput();
+}
+void Controller::MiddleLoop()
+{
+    if(!runController())
+    {
+        return;
+    }
+    float roll, pitch, yaw, z {0.f};
+    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+
+    float reference_angularRate_roll = _pid_roll.calculatePIDOutput(roll);
+    float reference_angularRate_pitch = _pid_pitch.calculatePIDOutput(pitch);
+    float reference_angularRate_yaw = _pid_yaw.calculatePIDOutput(yaw);
+
+    _pid_roll_angularRate.setReference(reference_angularRate_roll);
+    _pid_pitch_angularRate.setReference(reference_angularRate_pitch);
+    _pid_yaw_angularRate.setReference(reference_angularRate_yaw);
+
+    u_z = _pid_altitude.calculatePIDOutput(z);
+
+    adjustOutput();
+}
+void Controller::OuterLoop()
+{
+    
+}
+
+void Controller::adjustOutput()
+{
+    float omega_m1, omega_m2, omega_m3, omega_m4 { 0.f };
+    std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(u_roll, u_pitch, u_yaw, u_z);
+
+    hal.console->printf("F: %f| R: %f| P: %f| Y: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z, u_roll,u_pitch, u_yaw, omega_m1,omega_m2, omega_m3, omega_m4);
+    _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
+}
+
+bool Controller::runController()
 {
     if(!_motorController.getIsFlying())
     {
@@ -18,27 +69,19 @@ void Controller::loop()
         {
             _motorController.setAllMotorPeriod(1100,1100,1100,1100);
         }
-        return;
+        return false;
     }
-    float _roll, _pitch, _yaw, _z {0.f};
-    std::tie(_roll, _pitch, _yaw, _z) = _fake_measurement.getMeasurement();
-    
-    // float torque_roll = _pid_roll.calculatePIDOutput(_roll);
-    float torque_pitch = _pid_pitch.calculatePIDOutput(_pitch);
-    // float torque_yaw = _pid_yaw.calculatePIDOutput(_yaw);
-    // float force = _pid_altitude.calculatePIDOutput(_z);
-    
-    // hal.console->printf("%f|%f|%f|%f \n",_roll,_pitch,_yaw, _z);
-    // hal.console->printf("%f|%f \n",_pitch,torque_pitch);
+    return true;
+}
 
-    float omega_m1 { 0.f }; 
-    float omega_m2 { 0.f };
-    float omega_m3 { 0.f };
-    float omega_m4 { 0.f };
-    std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(0, torque_pitch, 0, 0);
-    // std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(torque_roll, torque_pitch, torque_yaw, force);
-    hal.console->printf("F: %f| TR: %f| TP: %f| TY: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",0.f, 0.f,torque_pitch, 0.f, omega_m1,omega_m2, omega_m3, omega_m4);
-    // hal.console->printf("F: %f| TR: %f| TP: %f| TY: %f| m1 %f| m2 %f| m3 %f| m4 %f|",force, torque_roll,torque_pitch, torque_yaw, omega_m1,omega_m2, omega_m3, omega_m4);
+std::tuple<float, float, float> Controller::body_angularRate_to_inertial_angular_rate(float body_rate_x, float body_rate_y, float body_rate_z)
+{
+    float roll, pitch, yaw, z {0.f};
+    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+     
+    float inertial_rate_roll =  1 * body_rate_x + tanf(pitch)*sinf(roll) *  body_rate_y - tanf(pitch)*cosf(roll) *  body_rate_z; 
+    float inertial_rate_pitch = 0 * body_rate_x + cosf(roll) *              body_rate_y + sinf(roll) *              body_rate_z;
+    float inertial_rate_yaw =   0 * body_rate_x - sinf(roll)/cosf(pitch) *  body_rate_y + cosf(roll)/cosf(pitch) *  body_rate_z;
 
-    _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
+    return {inertial_rate_roll, inertial_rate_pitch, inertial_rate_yaw};
 }

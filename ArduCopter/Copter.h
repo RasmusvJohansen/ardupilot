@@ -82,7 +82,6 @@
 #include <array>
 #include "Es_9_Controllers/ES_9_PID.h"
 #include "Es_9_Controllers/Controller.h"
-#include "Es_9_Controllers/Controller2.h"
 
 #include "Es_9_Sensor/GPS_fake.h"
 #include "Es_9_Sensor/fake_measurement.h"
@@ -286,19 +285,15 @@ private:
     ES_9_PID pid_yaw {2.7f, 0.018f, 0.f, 1.f/30.f};
 
     //PID angular rate 
-    ES_9_PID pid_roll_angularRate {1.f,1.f,1.f, 1.f/400.f}; 
-    ES_9_PID pid_pitch_angularRate {1.f,1.f,1.f, 1.f/400.f}; 
-    ES_9_PID pid_yaw_angularRate {1.f,1.f,1.f, 1.f/400.f}; 
+    ES_9_PID pid_roll_angularRate   {1.f, 1.f, 0.f, 1.f/400.f}; 
+    ES_9_PID pid_pitch_angularRate  {500.f, 100.f, 0.f, 1.f/400.f}; 
+    ES_9_PID pid_yaw_angularRate    {1.f, 1.f, 0.f, 0.f/400.f}; 
 
     ES_9_PID pid_altitude {2.f, 0.01f, 0.f, 1.f/30.f};
+    Controller pid_controller{complementary_Filter, sensor_IMU, sensor_barometer, motorController,sensor_gps_fake, sensor_fake,pid_roll_angularRate,pid_pitch_angularRate,pid_yaw_angularRate, pid_roll, pid_pitch, pid_yaw, pid_altitude};
 
-    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController,sensor_gps_fake, sensor_fake};
-    Controller2 pid_controller_angularRate{sensor_IMU,pid_roll_angularRate,pid_pitch_angularRate,pid_yaw_angularRate};
-
-    
     //functions should be reworked in the future to a better structure 
     void Send_Battery_To_Radio(void);
-
 
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;
