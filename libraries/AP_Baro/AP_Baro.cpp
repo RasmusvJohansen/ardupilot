@@ -324,7 +324,7 @@ void AP_Baro::calibrate(bool save)
     // now average over 5 values for the ground pressure settings
     float sum_pressure[BARO_MAX_INSTANCES] = {0};
     uint8_t count[BARO_MAX_INSTANCES] = {0};
-    const uint8_t num_samples = 5;
+    const uint8_t num_samples = 232; //232
 
     for (uint8_t c = 0; c < num_samples; c++) {
         uint32_t tstart = AP_HAL::millis();
@@ -338,6 +338,7 @@ void AP_Baro::calibrate(bool save)
             if (healthy(i)) {
                 sum_pressure[i] += sensors[i].pressure;
                 count[i] += 1;
+                hal.console->printf("Calibrating baro: %u \n", c);
             }
         }
         hal.scheduler->delay(100);

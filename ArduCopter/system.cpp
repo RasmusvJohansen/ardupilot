@@ -19,7 +19,7 @@ void Copter::init_ardupilot()
     // Inits are placed here
     //sensor_accelerometer.init();
     sensor_IMU.init();
-    sensor_barometer.init();
+    //sensor_barometer.init();
     sensor_magnetometer.init();
 
     
@@ -224,6 +224,8 @@ void Copter::init_ardupilot()
         // set mode to STABILIZE will trigger mode change notification to pilot
         set_mode(Mode::Number::STABILIZE, ModeReason::UNAVAILABLE);
     }
+
+    sensor_barometer.init();
 
         // flag that initialisation has completed
     ap.initialised = true;
