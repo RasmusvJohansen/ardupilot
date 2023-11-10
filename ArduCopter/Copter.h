@@ -280,7 +280,7 @@ private:
 
     // Controller
     //  Remove magic numbers when time
-    ES_9_PID pid_roll {2.5f, 0.05f, 0.40f, 1.f/75.f, 10.f};
+    ES_9_PID pid_roll {2.5f, 0.05f, 0.40f, 1.f/50.f, 10.f};
     ES_9_PID pid_pitch {2.5f, 0.05f, 0.40f, 1.f/50.f, 10.f};
     ES_9_PID pid_yaw {2.7f, 0.018f, 0.f, 1.f/30.f, 10.f};
 
@@ -291,7 +291,7 @@ private:
 
     ES_9_PID pid_altitude {2.f, 0.01f, 0.f, 1.f/30.f, 20.f};
     ES_9_PID pid_x {1.f, 0.f, 0.f, 1.f/5.f, 10.f}; 
-    ES_9_PID pid_y {1.f, 0.f, 0.f, 1.f/5.f, 10.f}; 
+    ES_9_PID pid_y {1.f, 0.05f, 1.f, 1.f/5.f, 10.f, 0.35f}; 
 
     Controller pid_controller{complementary_Filter, sensor_IMU, sensor_barometer, sensor_magnetometer, motorController,sensor_gps_fake, sensor_fake,pid_roll_angularRate,pid_pitch_angularRate,pid_yaw_angularRate, pid_roll, pid_pitch, pid_yaw, pid_altitude, pid_x, pid_y};
 
