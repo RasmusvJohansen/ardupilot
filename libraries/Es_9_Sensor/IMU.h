@@ -23,8 +23,9 @@ public:
         gyr_x,
         gyr_y,
         gyr_z,
-        acc_roll,
-        acc_pitch,
+        acc_x,
+        acc_y,
+        acc_z,
         Measurements_Type_List_Stop,
     };
 

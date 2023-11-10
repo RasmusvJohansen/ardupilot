@@ -3,8 +3,8 @@
 #include <AP_HAL/AP_HAL.h>
 extern const AP_HAL::HAL &hal;
 
-ES_9_PID::ES_9_PID(float Kp, float Ki, float Kd, float TS) :
-    kp{ Kp }, ki{ Ki }, kd{ Kd }, Ts { TS }
+ES_9_PID::ES_9_PID(float Kp, float Ki, float Kd, float TS, float lowpassPole) :
+    kp{ Kp }, ki{ Ki }, kd{ Kd }, Ts { TS }, N { lowpassPole }
 {
 
 }

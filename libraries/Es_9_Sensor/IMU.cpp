@@ -37,17 +37,18 @@ void IMU::updateMeasurements()
 
         // Start angular velocity measurements
         // Measure angular velocity in and rad/s
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr[static_cast<int>(Measurements::gyr_x)]; // here it should get the corresponding measurement for the sensor and measurement type
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_y) = -gyr[static_cast<int>(Measurements::gyr_y)]; // flip rotation around y axis
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_z) = gyr[static_cast<int>(Measurements::gyr_z)];
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_x) = gyr.x; // here it should get the corresponding measurement for the sensor and measurement type
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_y) = -gyr.y; // flip rotation around y axis
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::gyr_z) = gyr.z;
 
-
-        // Calculate roll and pitch in rad
         // acc.z is negative due to the imus z-axis being positive downwards
-        // acc.x and acc.y are negative to flip roll and pitch direction
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_roll) = atan2f(-acc.y, -acc.z);
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_pitch) = atan2f(-acc.x, -acc.z);
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_x) = acc.x; // here it should get the corresponding measurement for the sensor and measurement type
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_y) = acc.y; // flip rotation around y axis
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_z) = acc.z;
+
+        // hal.console->printf("%f, %f, %f, %f, %f, %f,",acc.x,acc.y,acc.z,gyr.x,gyr.y,gyr.z);
     }
+    // hal.console->printf("\n");
 }
 
 std::map<IMU::Sensors, std::map<IMU::Measurements, float>> IMU::getMeasurements()

@@ -1346,7 +1346,7 @@ bool AP_InertialSensor::_calculate_trim(const Vector3f &accel_sample, Vector3f &
 void
 AP_InertialSensor::init_gyro()
 {
-    _init_gyro();
+    // _init_gyro();
 
     // save calibration
     _save_gyro_calibration();

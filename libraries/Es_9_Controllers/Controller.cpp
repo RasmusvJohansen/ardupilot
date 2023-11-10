@@ -3,8 +3,8 @@
 #include <AP_HAL/AP_HAL.h>
 extern const AP_HAL::HAL &hal;
 
-Controller::Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_altitude) :
-    _complementary_filter{ complementary_filter }, _imu{ imu }, _barometer{ barometer }, _motorController{ motor_controller }, _gps{ gps }, _fake_measurement { fake_measurement }, _pid_roll_angularRate{ pid_roll_angularRate }, _pid_pitch_angularRate{ pid_pitch_angularRate }, _pid_yaw_angularRate{ pid_yaw_angularRate }, _pid_roll{ pid_roll }, _pid_pitch{ pid_pitch }, _pid_yaw{ pid_yaw }, _pid_altitude{ pid_altitude }
+Controller::Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_altitude, ES_9_PID& pid_x, ES_9_PID& pid_y) :
+    _complementary_filter{ complementary_filter }, _imu{ imu }, _barometer{ barometer }, _magnetometer{ magnetometer }, _motorController{ motor_controller }, _gps{ gps }, _fake_measurement { fake_measurement }, _pid_roll_angularRate{ pid_roll_angularRate }, _pid_pitch_angularRate{ pid_pitch_angularRate }, _pid_yaw_angularRate{ pid_yaw_angularRate }, _pid_roll{ pid_roll }, _pid_pitch{ pid_pitch }, _pid_yaw{ pid_yaw }, _pid_altitude{ pid_altitude }, _pid_x{ pid_x }, _pid_y{ pid_y }
 {
 
 }
@@ -19,9 +19,13 @@ void Controller::InnerLoop()
     std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
 
     u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
-    u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
-    u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
+    // u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
+    // u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
 
+    u_pitch = 0.f;
+    u_yaw = 0.f;
+
+    // hal.console->printf("IL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch_angularRate.getReference() - interial_rate_pitch, u_pitch);
     // hal.console->printf("Body: %f | %f | %f | Inertial: %f | %f | %f \n",_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z),interial_rate_roll, interial_rate_pitch, interial_rate_yaw);
 
     adjustOutput();
@@ -32,6 +36,22 @@ void Controller::MiddleLoop()
     {
         return;
     }
+
+    // For logging Kalman test
+    // float _x, _y, _z, _roll, _ptich, _yaw {0.f};
+    // std::tie(_x, _y, _z, _roll, _ptich, _yaw) = _fake_measurement.getMeasurementForLogging();
+    // float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
+    // std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
+    // float accX = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x);
+    // float accY = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y);
+    // float accZ = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z);
+    // float baroZ = _barometer.getMeasurements().at(Barometer::Sensors::baro_1).at(Barometer::Measurements::baro_altitude);
+    // float magX = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
+    // float magY = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
+    // float magZ = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
+
+    // hal.console->printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",_x, _y, _z, _roll, _ptich, _yaw, interial_rate_roll, interial_rate_pitch, interial_rate_yaw, accX, accY, accZ, baroZ, magX, magY,magZ);
+
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
 
@@ -43,13 +63,27 @@ void Controller::MiddleLoop()
     _pid_pitch_angularRate.setReference(reference_angularRate_pitch);
     _pid_yaw_angularRate.setReference(reference_angularRate_yaw);
 
-    u_z = _pid_altitude.calculatePIDOutput(z);
+    // hal.console->printf("OL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch.getReference() - pitch, reference_angularRate_pitch);
 
+    // u_z = _pid_altitude.calculatePIDOutput(z);
+    u_z = 0.f;
     adjustOutput();
 }
 void Controller::OuterLoop()
 {
-    
+    if(!runController())
+    {
+        return;
+    }
+
+    float x, y, z {0.f};
+    std::tie(x, y, z) = _fake_measurement.getPosition();
+
+    float reference_roll = _pid_y.calculatePIDOutput(y);
+    float reference_pitch = _pid_x.calculatePIDOutput(x);
+
+    _pid_roll.setReference(reference_roll);
+    _pid_pitch.setReference(reference_pitch);
 }
 
 void Controller::adjustOutput()
@@ -57,7 +91,7 @@ void Controller::adjustOutput()
     float omega_m1, omega_m2, omega_m3, omega_m4 { 0.f };
     std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(u_roll, u_pitch, u_yaw, u_z);
 
-    hal.console->printf("F: %f| R: %f| P: %f| Y: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z, u_roll,u_pitch, u_yaw, omega_m1,omega_m2, omega_m3, omega_m4);
+    // hal.console->printf("F: %f| R: %f| P: %f| Y: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z, u_roll,u_pitch, u_yaw, omega_m1,omega_m2, omega_m3, omega_m4);
     _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
 }
 
