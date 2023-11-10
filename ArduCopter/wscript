@@ -16,7 +16,7 @@ def build(bld):
             'AP_Camera',
             'AP_IRLock',
             'AP_InertialNav',
-            'AP_Motors',
+            'AP_Motors' ,
             'AP_RCMapper',
             'AP_Avoidance',
             'AP_AdvancedFailsafe',
@@ -35,19 +35,21 @@ def build(bld):
             'Es_9_Filter',
             'Es_9_Motor',
             'Es_9_Controllers',
+            
+            
         ],
     )
 
     bld.ap_program(
         program_name='arducopter',
         program_groups=['bin', 'copter'],
-        use=vehicle + '_libs',
+        use=[vehicle + '_libs','OPTIM'],
         defines=['FRAME_CONFIG=MULTICOPTER_FRAME'],
         )
 
     bld.ap_program(
         program_name='arducopter-heli',
         program_groups=['bin', 'heli'],
-        use=vehicle + '_libs',
+        use=[vehicle + '_libs' ],
         defines=['FRAME_CONFIG=HELI_FRAME'],
         )

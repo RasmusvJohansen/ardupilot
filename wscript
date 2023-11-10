@@ -429,6 +429,7 @@ def _collect_autoconfig_files(cfg):
 
 def configure(cfg):
 	# we need to enable debug mode when building for gconv, and force it to sitl
+    
     if cfg.options.board is None:
         cfg.options.board = 'sitl'
 
@@ -605,6 +606,8 @@ def configure(cfg):
 
     _collect_autoconfig_files(cfg)
 
+    
+    
 def collect_dirs_to_recurse(bld, globs, **kw):
     dirs = []
     globs = Utils.to_list(globs)
@@ -883,6 +886,9 @@ for program_group in ('all', 'bin', 'tool', 'examples', 'tests', 'benchmarks'):
         program_group_list=program_group,
         doc='builds all programs of %s group' % program_group,
     )
+
+    #cfg.env.append_value("LINKFLAGS",["-I libraries/optimization/include/optim", "-Llib libraries/optimization/lib/liboptim.so"])
+    #cfg.env.append_value("LIB",["optim"])
 
 class LocalInstallContext(Build.InstallContext):
     """runs install using BLD/install as destdir, where BLD is the build variant directory"""

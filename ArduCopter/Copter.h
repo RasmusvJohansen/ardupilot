@@ -85,6 +85,10 @@
 
 #include "Es_9_Sensor/GPS_fake.h"
 
+#include "Es_9_Test_opti/Opti.h"
+
+#include <string>
+
 
 // Configuration
 #include "defines.h"
@@ -284,7 +288,7 @@ private:
 
     Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController,sensor_gps_fake};
 
-
+    Opti optimizer;
     
     //functions should be reworked in the future to a better structure 
     void Send_Battery_To_Radio(void);
