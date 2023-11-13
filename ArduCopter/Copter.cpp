@@ -176,10 +176,11 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 80, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 40, 120, 7),
-    SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 5000, 9),
+    // SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
+    // SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 5, 5000, 9),
     SCHED_TASK_CLASS(Controller, &copter.pid_controller, MiddleLoop, 50, 5000, 10),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 5, 5000, 11),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 5000, 11),
+    
 
 
     SCHED_TASK(Send_Battery_To_Radio,10,100,99),
@@ -214,7 +215,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 // SCHED_TASK_CLASS(AP_Baro,              &copter.barometer,             accumulate,    50,  90,  63), --------Baro inspiration
 
 #if LOGGING_ENABLED == ENABLED
-    SCHED_TASK(loop_rate_logging, LOOP_RATE, 50, 75),
+    // SCHED_TASK(loop_rate_logging, LOOP_RATE, 50, 75),
 #endif
 
     // SCHED_TASK(one_hz_loop,            1,    100,  81),
@@ -231,21 +232,21 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(GCS, (GCS *)&copter._gcs, update_send, 400, 550, 105),
 
 #if LOGGING_ENABLED == ENABLED
-    SCHED_TASK(ten_hz_logging_loop, 10, 350, 114),
-    SCHED_TASK(twentyfive_hz_logging, 25, 110, 117),
-    SCHED_TASK_CLASS(AP_Logger, &copter.logger, periodic_tasks, 400, 300, 120),
+    // SCHED_TASK(ten_hz_logging_loop, 10, 350, 114),
+    // SCHED_TASK(twentyfive_hz_logging, 25, 110, 117),
+    // SCHED_TASK_CLASS(AP_Logger, &copter.logger, periodic_tasks, 400, 300, 120),
 #endif
 
     // SCHED_TASK_CLASS(AP_InertialSensor,    &copter.ins,                 periodic,       400,  50, 123),
 
-    SCHED_TASK_CLASS(AP_Scheduler, &copter.scheduler, update_logging, 0.1, 75, 126),
+    // SCHED_TASK_CLASS(AP_Scheduler, &copter.scheduler, update_logging, 0.1, 75, 126),
     // #if AP_RPM_ENABLED
     //     SCHED_TASK_CLASS(AP_RPM,               &copter.rpm_sensor,          update,          40, 200, 129),
     // #endif
 
 
     // Barometer calibration.
-    SCHED_TASK_CLASS(AP_TempCalibration, &copter.g2.temp_calibration, update, 10, 100, 135),
+    // SCHED_TASK_CLASS(AP_TempCalibration, &copter.g2.temp_calibration, update, 10, 100, 135),
 };
 
 void Copter::get_scheduler_tasks(const AP_Scheduler::Task *&tasks,

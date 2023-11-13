@@ -15,20 +15,30 @@ void Controller::InnerLoop()
     {
         return;
     }
-    float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
-    std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
 
-    u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
+    // For logging Kalman test
+    float rate_roll = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x);
+    float rate_pitch = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y);
+    float rate_yaw = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z);
+    float accX = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x);
+    float accY = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y);
+    float accZ = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z);
+    hal.console->printf("IL,%f,%f,%f,%f,%f,%f\n",accX, accY, accZ, rate_roll, rate_pitch, rate_yaw);
+
+    // float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
+    // std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
+
+    // u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
     // u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
     // u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
 
-    u_pitch = 0.f;
-    u_yaw = 0.f;
+    // u_pitch = 0.f;
+    // u_yaw = 0.f;
 
     // hal.console->printf("IL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch_angularRate.getReference() - interial_rate_pitch, u_pitch);
     // hal.console->printf("Body: %f | %f | %f | Inertial: %f | %f | %f \n",_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z),interial_rate_roll, interial_rate_pitch, interial_rate_yaw);
 
-    adjustOutput();
+    // adjustOutput();
 }
 void Controller::MiddleLoop()
 {
@@ -38,36 +48,32 @@ void Controller::MiddleLoop()
     }
 
     // For logging Kalman test
-    // float _x, _y, _z, _roll, _ptich, _yaw {0.f};
-    // std::tie(_x, _y, _z, _roll, _ptich, _yaw) = _fake_measurement.getMeasurementForLogging();
-    // float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
-    // std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
-    // float accX = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x);
-    // float accY = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y);
-    // float accZ = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z);
-    // float baroZ = _barometer.getMeasurements().at(Barometer::Sensors::baro_1).at(Barometer::Measurements::baro_altitude);
-    // float magX = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
-    // float magY = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
-    // float magZ = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
+    float _x, _y, _z, _roll, _ptich, _yaw {0.f};
+    std::tie(_x, _y, _z, _roll, _ptich, _yaw) = _fake_measurement.getMeasurementForLogging();
+    
+    float baroZ = _barometer.getMeasurements().at(Barometer::Sensors::baro_2).at(Barometer::Measurements::baro_altitude);
+    float magX = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
+    float magY = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_y);
+    float magZ = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_z);
 
-    // hal.console->printf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",_x, _y, _z, _roll, _ptich, _yaw, interial_rate_roll, interial_rate_pitch, interial_rate_yaw, accX, accY, accZ, baroZ, magX, magY,magZ);
+    hal.console->printf("ML,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",_x, _y, _z, _roll, _ptich, _yaw, baroZ, magX, magY,magZ);
 
-    float roll, pitch, yaw, z {0.f};
-    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+    // float roll, pitch, yaw, z {0.f};
+    // std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
 
-    float reference_angularRate_roll = _pid_roll.calculatePIDOutput(roll);
-    float reference_angularRate_pitch = _pid_pitch.calculatePIDOutput(pitch);
-    float reference_angularRate_yaw = _pid_yaw.calculatePIDOutput(yaw);
+    // float reference_angularRate_roll = _pid_roll.calculatePIDOutput(roll);
+    // float reference_angularRate_pitch = _pid_pitch.calculatePIDOutput(pitch);
+    // float reference_angularRate_yaw = _pid_yaw.calculatePIDOutput(yaw);
 
-    _pid_roll_angularRate.setReference(reference_angularRate_roll);
-    _pid_pitch_angularRate.setReference(reference_angularRate_pitch);
-    _pid_yaw_angularRate.setReference(reference_angularRate_yaw);
+    // _pid_roll_angularRate.setReference(reference_angularRate_roll);
+    // _pid_pitch_angularRate.setReference(reference_angularRate_pitch);
+    // _pid_yaw_angularRate.setReference(reference_angularRate_yaw);
 
     // hal.console->printf("OL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch.getReference() - pitch, reference_angularRate_pitch);
 
     // u_z = _pid_altitude.calculatePIDOutput(z);
-    u_z = 0.f;
-    adjustOutput();
+    // u_z = 0.f;
+    // adjustOutput();
 }
 void Controller::OuterLoop()
 {

@@ -44,7 +44,7 @@ void IMU::updateMeasurements()
         // acc.z is negative due to the imus z-axis being positive downwards
         sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_x) = acc.x; // here it should get the corresponding measurement for the sensor and measurement type
         sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_y) = acc.y; // flip rotation around y axis
-        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_z) = acc.z;
+        sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_z) = -acc.z;
 
         // hal.console->printf("%f, %f, %f, %f, %f, %f,",acc.x,acc.y,acc.z,gyr.x,gyr.y,gyr.z);
     }
