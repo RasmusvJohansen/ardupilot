@@ -1,28 +1,46 @@
 #include "AP_Math/vectorN.h"
 #include "AP_Math/matrixN.h"
 
+#include <array>
+#include <iostream>
 
 class SEKF
 {
 public:
     /* Skriv funktioner som viser værdier */
-     void calculateStateEstimate()
+    void kalmanFilter()
     {
-        
+        //Prediction step
+        dynamicsFunction();
+        calculateStatePrediction();
+        calculateErrorCovariancePrediction();
+        linDynamics();
+        //Update step
+        updateOutputEstimate();
+        calculateOutputError();
+        calculateKalmanGain();
+
     }
 
 
 private:
     /* Skriv variabler, matricer, vektorer og funktioner her */
-    static const int num_of_states{12};
+    static const int num_of_states{15};
     static const int num_of_inputs{4};
     static const int time_step{1};
+    uint8_t index;
     static const float gravity = 9.82;
 
-    VectorN<float,num_of_states>k;
-    VectorN<float,num_of_states>w;
 
-    float roll, pitch, yaw, x_inertia, y_inertia, z_inertia, mass, thrust_constant, roll_vel, pitch_vel, yaw_vel, ang_velo_m1, ang_velo_m2, ang_velo_m3, ang_velo_m4;
+    std::array<std::array<float, num_of_states>, num_of_states> kalman_gain{{}};
+    std::array<float, num_of_states> observation_noise;
+    std::array<float, num_of_states> process_noise;
+    std::array<float, num_of_states> output_error;
+
+    // float kalman_gain[num_of_states][num_of_states];
+    // float observation_noise[num_of_states];
+    // float process_noise[num_of_states];
+    // float outputError[num_of_states];
 
     //float torque_roll = cosf(roll)*sinf(roll)*(y_inertia-z_inertia)*powf(pitch_vel,2) + (powf(cosf(roll),2)-powf(sinf(roll),2))*(y_inertia-z_inertia) *pitch_vel *yaw_vel*cosf(pitch)-cosf(roll)*sinf(roll)*(y_inertia-z_inertia)*powf(yaw,2)*powf(cosf(pitch),2) + x_inertia*roll_vel*cosf(roll)*pitch_vel + x_inertia*roll_acc + x_inertia*yaw_acc*sinf(roll);
     //float torque_pitch = y_inertia*pitch_acc*powf(cosf(roll),2)-(yaw_vel*(roll_vel*cosf(pitch)*(cosf(powf(roll,2))-sinf(powf(roll,2)))-pitch_vel*cosf(roll)*sin(pitch)*sin(roll))+yaw_acc*cosf(pitch)*cosf(roll)*sinf(roll))*(y_inertia-z_inertia)+z_inertia*pitch_acc*powf(sinf(roll),2)-x_inertia*yaw_vel*roll_vel*cosf(pitch)+powf(yaw_vel,2)*cosf(pitch)*sin(pitch)*(z_inertia*powf(cosf(roll),2)+y_inertia*powf(sinf(roll),2)-x_inertia)-2*y_inertia*pitch_vel*roll_vel*cosf(roll)*sinf(roll)+2*z_inertia_pitch_vel*roll_vel*sinf(roll*sinf(roll))-pitch_vel*yaw_vel*cosf(roll)*sinf(pitch)*sinf(roll)*(y_inertia-z_inertia);
@@ -48,30 +66,62 @@ private:
     float y_vel = prev_states[8] + y_acc * time_step;  
     float z_vel = prev_states[9] + z_acc * time_step;  
     */
-    float roll_acc, pitch_acc, yaw_acc, roll_vel, pitch_vel, yaw_vel, x_acc, y_acc, z_acc, x_vel, y_vel, z_vel;
+    float x_jerk, y_jerk, z_jerk, roll_acc, pitch_acc, yaw_acc, roll_vel, pitch_vel, yaw_vel, x_acc, y_acc, z_acc, x_vel, y_vel, z_vel, ang_velo_m1, ang_velo_m2, ang_velo_m3, ang_velo_m4, mass, thrust_constant, roll, pitch, yaw, x_inertia, y_inertia, z_inertia;
 
-    float dynamics_vector[num_of_states] = {x_acc,y_acc,z_acc,roll_acc,pitch_acc,yaw_acc,x_vel,y_vel,z_vel,roll_vel,pitch_vel,yaw_vel};
-    float output_vector[num_of_states] ={}; 
-    float input[num_of_inputs] = {ang_velo_m1, ang_velo_m2, ang_velo_m3, ang_velo_m4};
-    float state_estimate[num_of_states];
-    float state_predict[num_of_states];
-    float output[num_of_states];
-    float output_est[num_of_states];
 
-    float identity[num_of_states][num_of_states]; //Rember at denne skal laves til en identitets matrix på et tidspunkt
-    float est_error_cov[num_of_states][num_of_states];
-    float predict_error_cov[num_of_states][num_of_states]; //Denne skal starte med værdier da den er initial estiamte eller noget til at starte med
-    float dynamics_lin_matrix[num_of_states][num_of_states];
-    float q[num_of_states][num_of_states];
-    float output_lin_matrix[num_of_states][num_of_states];
-    float r[num_of_states][num_of_states];
+    std::array<float, num_of_states> dynamics_vector = {x_acc,y_acc,z_acc,roll_acc,pitch_acc,yaw_acc,x_vel,y_vel,z_vel,roll_vel,pitch_vel,yaw_vel,x_jerk,y_jerk,z_jerk};
+    std::array<float, num_of_states> output_vector;
+    std::array<float, num_of_states> input = {ang_velo_m1, ang_velo_m2, ang_velo_m3, ang_velo_m4};
+    std::array<float, num_of_states> state_estimate;
+    std::array<float, num_of_states> state_predict;
+    std::array<float, num_of_states> output;
+    std::array<float, num_of_states> output_est;
 
+
+    // float dynamics_vector[num_of_states] = {x_acc,y_acc,z_acc,roll_acc,pitch_acc,yaw_acc,x_vel,y_vel,z_vel,roll_vel,pitch_vel,yaw_vel,x_jerk,y_jerk,z_jerk};
+    // float output_vector[num_of_states] ={}; 
+    // float input[num_of_inputs] = {ang_velo_m1, ang_velo_m2, ang_velo_m3, ang_velo_m4};
+    // float state_estimate[num_of_states];
+    // float state_predict[num_of_states];
+    // float output[num_of_states];
+    // float output_est[num_of_states];
+
+    std::array<std::array<float, num_of_states>, num_of_states> identity; //Rember at denne skal laves til en identitets matrix på et tidspunkt
+    std::array<std::array<float, num_of_states>, num_of_states> est_error_cov;
+    std::array<std::array<float, num_of_states>, num_of_states> predict_error_cov; //Denne skal starte med værdier da den er initial estiamte eller noget til at starte med
+    std::array<std::array<float, num_of_states>, num_of_states> dynamics_lin_matrix;
+    std::array<std::array<float, num_of_states>, num_of_states> estimate_error_cov;
+    std::array<std::array<float, num_of_states>, num_of_states> output_lin_matrix; // samme som C matrix
+    std::array<std::array<float, num_of_states>, num_of_states> meas_noise_cov;
+
+
+    // float identity[num_of_states][num_of_states]; //Rember at denne skal laves til en identitets matrix på et tidspunkt
+    // float est_error_cov[num_of_states][num_of_states];
+    // float predict_error_cov[num_of_states][num_of_states]; //Denne skal starte med værdier da den er initial estiamte eller noget til at starte med
+    // float dynamics_lin_matrix[num_of_states][num_of_states];
+    // float estimate_error_cov[num_of_states][num_of_states];
+    // float output_lin_matrix[num_of_states][num_of_states]; // samme som C matrix
+    // float meas_noise_cov[num_of_states][num_of_states];
+
+    void linOutput()
+    {
+
+    }
+
+    void linDynamics()
+    {
+
+    }
+
+    void updateErrorCov()
+    {
+
+    }
 
     void calculateKalmanGain()
     {
 
     }
-
    
     void updateStateEstimate()
     {
@@ -83,7 +133,7 @@ private:
 
     }
 
-    void calculateErrorCovariance()
+    void calculateErrorCovariancePrediction()
     {
 
     }
@@ -93,8 +143,24 @@ private:
 
     }
 
-    void dynamicsFunction(VectorN<float,num_of_states>x, VectorN<float,num_of_states> u)
+    void dynamicsFunction()
     {
 
     }
+
+    void updateOutputEstimate()
+    {
+
+    }
+
+    void calculateOutputError()
+    {
+
+    }
+
+    void calculateStateEstimate()
+    {
+        
+    }
 };
+
