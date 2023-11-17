@@ -35,8 +35,8 @@ void Controller::InnerLoop()
     u_pitch = 0.f;
     u_yaw = 0.f;
 
-    hal.console->printf("IL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch_angularRate.getReference() - interial_rate_pitch, u_pitch);
-    hal.console->printf("Body: %f | %f | %f | Inertial: %f | %f | %f \n",_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z),interial_rate_roll, interial_rate_pitch, interial_rate_yaw);
+    //hal.console->printf("IL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch_angularRate.getReference() - interial_rate_pitch, u_pitch);
+    //hal.console->printf("Body: %f | %f | %f | Inertial: %f | %f | %f \n",_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z),interial_rate_roll, interial_rate_pitch, interial_rate_yaw);
 
     adjustOutput();
 }
@@ -73,6 +73,7 @@ void Controller::MiddleLoop()
 
     // u_z = _pid_altitude.calculatePIDOutput(z);
     u_z = 0.f;
+    
     adjustOutput();
 }
 void Controller::OuterLoop()
@@ -119,9 +120,13 @@ std::tuple<float, float, float> Controller::body_angularRate_to_inertial_angular
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
      
-    float inertial_rate_roll =  1 * body_rate_x + tanf(pitch)*sinf(roll) *  body_rate_y - tanf(pitch)*cosf(roll) *  body_rate_z; 
+    /* float inertial_rate_roll =  1 * body_rate_x + tanf(pitch)*sinf(roll) *  body_rate_y - tanf(pitch)*cosf(roll) *  body_rate_z; 
     float inertial_rate_pitch = 0 * body_rate_x + cosf(roll) *              body_rate_y + sinf(roll) *              body_rate_z;
     float inertial_rate_yaw =   0 * body_rate_x - sinf(roll)/cosf(pitch) *  body_rate_y + cosf(roll)/cosf(pitch) *  body_rate_z;
+ */
 
+    float inertial_rate_roll =  1 * body_rate_x + 0 *  body_rate_y          + sinf(pitch)           *  body_rate_z; 
+    float inertial_rate_pitch = 0 * body_rate_x + cosf(roll) *body_rate_y   - cosf(pitch)*sinf(roll) * body_rate_z;
+    float inertial_rate_yaw =   0 * body_rate_x + sinf(roll) *  body_rate_y + cosf(roll)*cosf(pitch) * body_rate_z;
     return {inertial_rate_roll, inertial_rate_pitch, inertial_rate_yaw};
 }
