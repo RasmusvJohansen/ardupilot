@@ -145,7 +145,7 @@ def options(opt):
         action='store_true',
         default=None,
         help='build with -Werror.')
-
+    
     g.add_option('--disable-Werror',
         action='store_true',
         default=None,

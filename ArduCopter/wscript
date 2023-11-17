@@ -35,15 +35,16 @@ def build(bld):
             'Es_9_Filter',
             'Es_9_Motor',
             'Es_9_Controllers',
-            
-            
+            'Test_Optimization',
+            'Test_Optimization/Code',
+            'Eigen',
         ],
     )
 
     bld.ap_program(
         program_name='arducopter',
         program_groups=['bin', 'copter'],
-        use=[vehicle + '_libs','OPTIM'],
+        use=[vehicle + '_libs'],
         defines=['FRAME_CONFIG=MULTICOPTER_FRAME'],
         )
 

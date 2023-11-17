@@ -22,10 +22,10 @@
 #define OPTIMLIB_MISC_INCLUDES
 
 // structs
-#include "misc/optim_structs.hpp"
+#include "optim_structs.hpp"
 
 // trace
-#include "misc/optim_trace.hpp"
+#include "optim_trace.hpp"
 
 // utility functions
 #include "determine_bounds_type.hpp"

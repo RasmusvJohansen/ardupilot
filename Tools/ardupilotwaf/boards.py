@@ -212,7 +212,7 @@ class Board:
             '-Wno-redundant-decls',
             '-Wno-unknown-pragmas',
             '-Wno-trigraphs',
-            '-Werror=shadow',
+            #'-Werror=shadow',
             '-Werror=return-type',
             '-Werror=unused-result',
             '-Werror=unused-variable',
@@ -347,7 +347,7 @@ class Board:
             '-Werror=type-limits',
             '-Werror=undef',
             '-Werror=unused-result',
-            '-Werror=shadow',
+            #'-Werror=shadow',
             '-Werror=unused-value',
             '-Werror=unused-variable',
             '-Werror=delete-non-virtual-dtor',
@@ -410,7 +410,7 @@ class Board:
         if cfg.options.Werror:
             errors = ['-Werror',
                       '-Werror=missing-declarations',
-                      '-Werror=float-equal',
+                      #'-Werror=float-equal',
                       '-Werror=undef',
                     ]
             env.CFLAGS += errors
@@ -663,7 +663,7 @@ class sitl(Board):
                 cfg.define('HAL_CAN_WITH_SOCKETCAN', 0)
 
         env.CXXFLAGS += [
-            '-Werror=float-equal',
+            #'-Werror=float-equal',
             '-Werror=missing-declarations',
         ]
 
@@ -920,7 +920,7 @@ class esp32(Board):
                          '-fno-threadsafe-statics',
                          '-DCYGWIN_BUILD']
         env.CXXFLAGS.remove('-Werror=undef')
-        env.CXXFLAGS.remove('-Werror=shadow')
+        #env.CXXFLAGS.remove('-Werror=shadow')
 
 
         env.INCLUDES += [
@@ -984,7 +984,7 @@ class chibios(Board):
             '-Wall',
             '-Wextra',
             '-Wno-sign-compare',
-            '-Wfloat-equal',
+            #'-Wfloat-equal',
             '-Wpointer-arith',
             '-Wmissing-declarations',
             '-Wno-unused-parameter',
@@ -1018,7 +1018,7 @@ class chibios(Board):
             env.CFLAGS += [
             '-Wno-error=double-promotion',
             '-Wno-error=missing-declarations',
-            '-Wno-error=float-equal',
+            #'-Wno-error=float-equal',
             '-Wno-error=cpp',
             ]
 

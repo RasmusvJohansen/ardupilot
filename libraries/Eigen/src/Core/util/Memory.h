@@ -17,6 +17,9 @@
 *** Platform checks for aligned malloc functions                           ***
 *****************************************************************************/
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+
+
 #ifndef EIGEN_MEMORY_H
 #define EIGEN_MEMORY_H
 

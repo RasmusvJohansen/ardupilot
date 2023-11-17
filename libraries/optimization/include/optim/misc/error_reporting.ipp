@@ -201,10 +201,10 @@ error_reporting(
 )
 {
     std::function<fp_t (const ColVec_t& vals_inp, ColVec_t* grad_out, void* opt_data)> lam_objfn \
-    = [opt_objfn] (const ColVec_t& vals_inp, ColVec_t* grad_out, void* opt_data) 
+    = [opt_objfn] (const ColVec_t& vals_inp, ColVec_t* grad_out, void* opt_dataa) 
     -> fp_t 
     {
-        return opt_objfn(vals_inp,grad_out,nullptr,opt_data);
+        return opt_objfn(vals_inp,grad_out,nullptr,opt_dataa);
     };
 
     //

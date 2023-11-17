@@ -17,6 +17,7 @@
   This is the main Copter class
  */
 
+
 ////////////////////////////////////////////////////////////////////////////////
 // Header includes
 ////////////////////////////////////////////////////////////////////////////////
@@ -87,12 +88,11 @@
 
 #include "Es_9_Test_opti/Opti.h"
 
-#include <string>
-
-
 // Configuration
 #include "defines.h"
 #include "config.h"
+
+
 
 #if FRAME_CONFIG == HELI_FRAME
 #define AC_AttitudeControl_t AC_AttitudeControl_Heli

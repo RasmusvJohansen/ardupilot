@@ -77,26 +77,15 @@
 
 // floating point number type
 
-#ifndef OPTIM_FPN_TYPE
-    #define OPTIM_FPN_TYPE double
-#endif
-
-#if OPTIM_FPN_TYPE == float
-    #undef OPTIM_FPN_SMALL_NUMBER
-    #define OPTIM_FPN_SMALL_NUMBER fp_t(1e-05)
-#elif OPTIM_FPN_TYPE == double
     #undef OPTIM_FPN_SMALL_NUMBER
     #define OPTIM_FPN_SMALL_NUMBER fp_t(1e-08)
-#else
-    #error OptimLib: floating-point number type (OPTIM_FPN_TYPE) must be 'float' or 'double'
-#endif
 
 //
 
 namespace optim
 {
     using uint_t = unsigned int;
-    using fp_t = OPTIM_FPN_TYPE;
+    using fp_t = double;
 
     using rand_engine_t = std::mt19937_64;
 
@@ -206,7 +195,7 @@ namespace optim
 
     namespace bmo
     {
-        using fp_t = OPTIM_FPN_TYPE;
+        using fp_t = double;
 
         using ColVec_t = optim::ColVec_t;
         using RowVec_t = optim::RowVec_t;
@@ -218,4 +207,4 @@ namespace optim
     }
 #endif
 
-#include "BaseMatrixOps/include/BaseMatrixOps.hpp"
+#include "../BaseMatrixOps/include/BaseMatrixOps.hpp"
