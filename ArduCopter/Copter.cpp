@@ -532,7 +532,7 @@ void Copter::rc_loop()
     pid_x.setReference(rc_in_pitch * input_scale - input_offset);
 
 
-    pid_altitude.setReference(1.2f);
+    // pid_altitude.setReference(1.2f);
     // int16_t rc_in_yaw = rc().channel(3)->get_radio_in();
     // pid_yaw.setReference(rc_in_yaw * input_scale - input_offset);
 

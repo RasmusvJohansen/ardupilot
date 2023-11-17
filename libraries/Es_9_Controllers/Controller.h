@@ -45,7 +45,7 @@ private:
     ES_9_PID& _pid_x;
     ES_9_PID& _pid_y;
 
-    float input_linearisation_rads { 337.67f };
+    float input_linearisation_rads { 487.67f };
     float u_roll, u_pitch, u_yaw, u_z { 0.f };
     void adjustOutput();
     bool runController();

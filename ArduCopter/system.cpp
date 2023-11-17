@@ -22,6 +22,8 @@ void Copter::init_ardupilot()
     sensor_barometer.init();
     sensor_magnetometer.init();
 
+    pid_altitude.setReference(1.2f);
+
     
 
 #if STATS_ENABLED == ENABLED
