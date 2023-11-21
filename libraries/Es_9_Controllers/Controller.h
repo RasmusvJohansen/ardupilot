@@ -51,4 +51,7 @@ private:
     bool runController();
 
     std::tuple<float, float, float> body_angularRate_to_inertial_angular_rate(float body_rate_x, float body_rate_y, float body_rate_z);
+    std::tuple<float, float, float> inertial_angularRate_to_body_angular_rate(float i_rate_x, float i_rate_y, float i_rate_z);
+    std::tuple<float, float, float> RotationBI(float roll_b, float pitch_b, float yaw_b);
+    std::tuple<float, float, float> RotationIB(float roll_i, float pitch_i, float yaw_i);
 };

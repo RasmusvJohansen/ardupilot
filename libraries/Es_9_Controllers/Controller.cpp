@@ -26,14 +26,17 @@ void Controller::InnerLoop()
     // hal.console->printf("IL,%f,%f,%f,%f,%f,%f\n",accX, accY, accZ, rate_roll, rate_pitch, rate_yaw);
 
     float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
-    std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = body_angularRate_to_inertial_angular_rate(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
+    std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = RotationBI(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
 
     u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
     u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
     u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
     //hal.console->printf("ml: %f \n",u_roll);
-    //u_roll = 0.f;
+    // u_roll = 0.f;
+    u_pitch = 0.f;
     u_yaw = 0.f;
+
+    // hal.console->printf("I_R: %f|I_P: %f| I_Y: %f|u_roll: %f|\n",interial_rate_roll,interial_rate_pitch,interial_rate_yaw,u_roll);
 
     //hal.console->printf("IL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch_angularRate.getReference() - interial_rate_pitch, u_pitch);
     //hal.console->printf("Body: %f | %f | %f | Inertial: %f | %f | %f \n",_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z),interial_rate_roll, interial_rate_pitch, interial_rate_yaw);
@@ -68,11 +71,12 @@ void Controller::MiddleLoop()
     _pid_roll_angularRate.setReference(reference_angularRate_roll);
     _pid_pitch_angularRate.setReference(reference_angularRate_pitch);
     _pid_yaw_angularRate.setReference(reference_angularRate_yaw);
+    //hal.console->printf("roll_error: %f\n", _pid_roll.getReference());
     //hal.console->printf("ml: %f \n",reference_angularRate_roll);
     //hal.console->printf("OL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch.getReference() - pitch, reference_angularRate_pitch);
 
-    u_z = _pid_altitude.calculatePIDOutput(z);
-    //u_z = 0.f;
+    //u_z = _pid_altitude.calculatePIDOutput(z);
+    u_z = 0.f;
     
     adjustOutput();
 }
@@ -86,7 +90,7 @@ void Controller::OuterLoop()
     float x, y, z {0.f};
     std::tie(x, y, z) = _fake_measurement.getPosition();
 
-    float reference_roll = -_pid_y.calculatePIDOutput(y); //Rember remove "-" when output is fix
+    float reference_roll = -_pid_y.calculatePIDOutput(y); //Rember to remove -
     float reference_pitch = _pid_x.calculatePIDOutput(x);
     _pid_roll.setReference(reference_roll);
     _pid_pitch.setReference(reference_pitch);
@@ -94,10 +98,16 @@ void Controller::OuterLoop()
 
 void Controller::adjustOutput()
 {
-    float omega_m1, omega_m2, omega_m3, omega_m4 { 0.f };
-    std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(u_roll, u_pitch, u_yaw, u_z);
+    float omega_m1, omega_m2, omega_m3, omega_m4, u_roll_b, u_pitch_b, u_yaw_b { 0.f };
 
-    // hal.console->printf("F: %f| R: %f| P: %f| Y: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z, u_roll,u_pitch, u_yaw, omega_m1,omega_m2, omega_m3, omega_m4);
+    std::tie(u_roll_b,u_pitch_b,u_yaw_b) = RotationIB(u_roll,u_pitch,u_yaw);
+    std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(u_roll_b, u_pitch_b, u_yaw_b, u_z);
+    
+    
+    float roll, pitch, yaw, z {0.f};
+    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+    //hal.console->printf("Roll: %f| Pitch: %f| Yaw: %f| u_p: %f| u_b: %f | %f | u_f: %f| \n",roll,pitch,yaw,u_pitch,u_roll_b,u_pitch_b,u_roll);
+    //hal.console->printf("F: %f| R: %f| P: %f| Y: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z, u_roll_b,u_pitch_b, u_yaw_b, omega_m1,omega_m2, omega_m3, omega_m4);
     _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
 }
 
@@ -119,15 +129,52 @@ std::tuple<float, float, float> Controller::body_angularRate_to_inertial_angular
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
 
+    //T_inv
     float inertial_rate_roll =  1*body_rate_x   +tanf(pitch)*sinf(roll)*body_rate_y     +tanf(pitch)*cosf(roll)*body_rate_z; 
     float inertial_rate_pitch = 0*body_rate_x   +cosf(roll)            *body_rate_y     -sinf(roll)            *body_rate_z;
     float inertial_rate_yaw =   0*body_rate_x   +sinf(roll)/cosf(pitch)*body_rate_y     +cosf(roll)/cosf(pitch)*body_rate_z;
 
 
-/*
-    float inertial_rate_roll =  1 * body_rate_x + 0             * body_rate_y   + sinf(pitch)               *body_rate_z; 
-    float inertial_rate_pitch = 0 * body_rate_x + cosf(roll)    * body_rate_y   - cosf(pitch)*sinf(roll)    *body_rate_z;
-    float inertial_rate_yaw =   0 * body_rate_x + sinf(roll)    * body_rate_y   + cosf(roll)*cosf(pitch)    *body_rate_z;
-*/
     return {inertial_rate_roll, inertial_rate_pitch, inertial_rate_yaw};
+}
+
+
+std::tuple<float, float, float> Controller::inertial_angularRate_to_body_angular_rate(float i_rate_x, float i_rate_y, float i_rate_z)
+{
+    float roll, pitch, yaw, z {0.f};
+    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+
+    //T
+    float body_rate_roll =  1*i_rate_x   +0                     *i_rate_y              -sinf(pitch)*i_rate_z; 
+    float body_rate_pitch = 0*i_rate_x   +cosf(roll)            *i_rate_y     +cosf(pitch)*sinf(roll)*i_rate_z;
+    float body_rate_yaw =   0*i_rate_x   -sinf(roll)            *i_rate_y     +cosf(roll)*cosf(pitch)*i_rate_z;
+
+
+    
+
+    return {body_rate_roll, body_rate_pitch, body_rate_yaw};
+}
+
+
+
+std::tuple<float, float, float> Controller::RotationBI(float roll_b, float pitch_b, float yaw_b)
+{   
+    float roll, pitch, yaw, z {0.f};
+    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+
+    float inertial_roll = cosf(pitch)*cosf(yaw) *  roll_b + (cosf(yaw)*sinf(pitch)*sinf(roll)-cosf(roll)*sinf(yaw)) *      pitch_b  +(sinf(pitch)*sinf(roll) + cosf(yaw)*cosf(roll)*sinf(pitch))*yaw_b; 
+    float inertial_pitch = cosf(pitch)*sinf(yaw) * roll_b + (cosf(yaw)*cosf(roll) + sinf(pitch)*sinf(yaw)*sinf(roll)) *    pitch_b  +(cosf(roll)*sinf(pitch)*sinf(yaw)-cosf(yaw)*sinf(roll))     *yaw_b;
+    float inertial_yaw = -sinf(pitch)              *roll_b + cosf(pitch)*sinf(roll)                                    *    pitch_b +  cosf(pitch)*cosf(roll)                                     *yaw_b;
+    return {inertial_roll, inertial_pitch, inertial_yaw};
+}
+
+std::tuple<float, float, float> Controller::RotationIB(float roll_i, float pitch_i, float yaw_i)
+{   
+    float roll, pitch, yaw, z {0.f};
+    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
+
+    float b_roll = cosf(pitch)*cosf(yaw)                                     * roll_i +  cosf(pitch)*sinf(yaw)                                   *  pitch_i  -sinf(pitch)                  * yaw_i; 
+    float b_pitch = (cosf(yaw)*sinf(pitch)*sinf(roll)-cosf(roll)*sinf(yaw)) * roll_i + (cosf(yaw)*cosf(roll) + sinf(pitch)*sinf(yaw)*sinf(roll)) *    pitch_i  +    cosf(pitch)*sinf(roll) *yaw_i;
+    float b_yaw = (sinf(pitch)*sinf(roll) + cosf(yaw)*cosf(roll)*sinf(pitch)) *roll_i +(cosf(roll)*sinf(pitch)*sinf(yaw)-cosf(yaw)*sinf(roll))      *    pitch_i +  cosf(pitch)*cosf(roll)  *yaw_i;
+    return {b_roll, b_pitch, b_yaw};
 }

@@ -2,7 +2,7 @@
 
 #include <array>
 #include <tuple>
-
+#include "math.h"
 class fake_measurement
 {
 public:
