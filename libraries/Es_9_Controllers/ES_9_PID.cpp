@@ -25,12 +25,21 @@ float ES_9_PID::calculatePIDOutput(float new_measurement)
     //     prev_output.at(0) = 0.f;
     // }
 
+    if (saturationEnabled && new_error/abs(new_error) != prev_error.at(0)/abs(prev_error.at(0)))
+    {
+        prev_output.at(0) = 0;
+        prev_output.at(1) = 0;
+    }
     float new_output = term1Scale * new_error + term2Scale * prev_error.at(0) + term3Scale * prev_error.at(1) + term4Scale * prev_output.at(0) + term5Scale * prev_output.at(1);
     
     if(saturationEnabled && abs(new_output) > outputSaturation)
     {
-        new_output = new_output/abs(new_output) * outputSaturation;
+         new_output = new_output/abs(new_output) * outputSaturation;
+        
+        
     }
+
+    
 
     prev_error.at(1) = prev_error.at(0);
     prev_error.at(0) = new_error;

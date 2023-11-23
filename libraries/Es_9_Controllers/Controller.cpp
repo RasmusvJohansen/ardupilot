@@ -31,10 +31,10 @@ void Controller::InnerLoop()
     u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
     u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
     u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
-    //hal.console->printf("ml: %f \n",u_roll);
+    //hal.console->printf("%f|%f\n",u_yaw,_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
     // u_roll = 0.f;
-    u_pitch = 0.f;
-    u_yaw = 0.f;
+    // u_pitch = 0.f;
+    //u_yaw = 0.f;
 
     // hal.console->printf("I_R: %f|I_P: %f| I_Y: %f|u_roll: %f|\n",interial_rate_roll,interial_rate_pitch,interial_rate_yaw,u_roll);
 
@@ -75,8 +75,8 @@ void Controller::MiddleLoop()
     //hal.console->printf("ml: %f \n",reference_angularRate_roll);
     //hal.console->printf("OL,%lu,%f,%f \n",AP_HAL::millis(),_pid_pitch.getReference() - pitch, reference_angularRate_pitch);
 
-    //u_z = _pid_altitude.calculatePIDOutput(z);
-    u_z = 0.f;
+    u_z = _pid_altitude.calculatePIDOutput(z);
+    //u_z = 0.f;
     
     adjustOutput();
 }
@@ -101,13 +101,13 @@ void Controller::adjustOutput()
     float omega_m1, omega_m2, omega_m3, omega_m4, u_roll_b, u_pitch_b, u_yaw_b { 0.f };
 
     std::tie(u_roll_b,u_pitch_b,u_yaw_b) = RotationIB(u_roll,u_pitch,u_yaw);
-    std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(u_roll_b, u_pitch_b, u_yaw_b, u_z);
+    std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = motor_mixing.mix(u_roll_b, u_pitch_b, u_yaw_b, u_z); //rasmus har lavet ballade her
     
     
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
     //hal.console->printf("Roll: %f| Pitch: %f| Yaw: %f| u_p: %f| u_b: %f | %f | u_f: %f| \n",roll,pitch,yaw,u_pitch,u_roll_b,u_pitch_b,u_roll);
-    //hal.console->printf("F: %f| R: %f| P: %f| Y: %f| m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z, u_roll_b,u_pitch_b, u_yaw_b, omega_m1,omega_m2, omega_m3, omega_m4);
+    hal.console->printf("F: %f|u_p_B %f|u_r_b %f|u_y_b %f | m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z,u_pitch_b,u_roll_b,u_yaw_b, omega_m1,omega_m2, omega_m3, omega_m4);
     _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
 }
 

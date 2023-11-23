@@ -22,7 +22,7 @@ void Copter::init_ardupilot()
     sensor_barometer.init();
     sensor_magnetometer.init();
 
-    pid_altitude.setReference(1.2f);
+    pid_altitude.setReference(1.0f);
 
     
 
