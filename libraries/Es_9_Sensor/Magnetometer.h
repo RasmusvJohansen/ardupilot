@@ -12,6 +12,7 @@ public:
     enum class Sensors : int
     {
         Mag1,
+        Mag_GPS,
         Sensor_List_stop,
     };
     // This can be changed to contain all measurements.

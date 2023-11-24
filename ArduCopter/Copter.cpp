@@ -176,7 +176,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 80, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 40, 120, 7),
-    SCHED_TASK_CLASS(GPS, &copter.sensor_GPS, loop, 50, 200, 8),
+    //SCHED_TASK_CLASS(GPS, &copter.sensor_GPS, loop, 50, 200, 8),
     SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 9),
     SCHED_TASK_CLASS(Controller, &copter.pid_controller, loop, 400, 5000, 10),
 

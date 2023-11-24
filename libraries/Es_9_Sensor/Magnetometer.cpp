@@ -35,6 +35,8 @@ void Magnetometer::updateMeasurements()
         // Return the current field as a Vector3f in milligauss
         mag = AP::compass().get_field(sensor);
 
+        hal.console->printf("%d - X: %.2f Y: %.2f Z: %.2f \n", sensor, mag.x, mag.y, mag.z);
+
         for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
         {
             // Calculate yaw in rad
