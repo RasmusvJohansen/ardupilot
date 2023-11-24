@@ -77,6 +77,7 @@
 #include "Es_9_Sensor/IMU.h"
 #include "Es_9_Sensor/Barometer.h"
 #include "Es_9_Sensor/Magnetometer.h"
+#include "Es_9_Sensor/GPS.h"
 #include "Es_9_Filter/Complementary_Filter.h"
 #include "Es_9_Motor/Es_9_Motor.h"
 #include <array>
@@ -267,6 +268,7 @@ private:
     IMU sensor_IMU;
     Barometer sensor_barometer;
     Magnetometer sensor_magnetometer;
+    GPS sensor_GPS;
     GPS_fake sensor_gps_fake;
     
     // Filters.

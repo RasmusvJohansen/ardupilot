@@ -21,7 +21,7 @@ void Copter::init_ardupilot()
     sensor_IMU.init();
     sensor_barometer.init();
     sensor_magnetometer.init();
-
+    sensor_GPS.init();
     
 
 #if STATS_ENABLED == ENABLED
