@@ -21,11 +21,13 @@ void Magnetometer::updateMeasurements()
 
     // Return the current field as a Vector3f in milligauss
     mag = AP::compass().get_field(SensorLocation);
-    measurements.at(Measurements::mag_x) = mag.x;
-    measurements.at(Measurements::mag_y) = -mag.y;
-    measurements.at(Measurements::mag_z) = -mag.z;
+    //measurements.at(Measurements::mag_x) = mag.x;
+    //measurements.at(Measurements::mag_y) = -mag.y;
+    //measurements.at(Measurements::mag_z) = -mag.z;
 
-    // hal.console->printf("%f,%f,%f \n",mag.x, mag.y, mag.z);
+    measurements.at(Measurements::mag_x) = mag.y;
+    measurements.at(Measurements::mag_y) = mag.x;
+    measurements.at(Measurements::mag_z) = -mag.z;
 }
 
 std::map<Magnetometer::Measurements, float> Magnetometer::getMeasurements()

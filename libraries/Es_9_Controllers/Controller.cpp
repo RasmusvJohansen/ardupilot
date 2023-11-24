@@ -17,13 +17,13 @@ void Controller::InnerLoop()
     }
 
     // For logging Kalman test
-    // float rate_roll = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x);
-    // float rate_pitch = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y);
-    // float rate_yaw = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z);
-    // float accX = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x);
-    // float accY = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y);
-    // float accZ = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z);
-    // hal.console->printf("IL,%f,%f,%f,%f,%f,%f\n",accX, accY, accZ, rate_roll, rate_pitch, rate_yaw);
+    float rate_roll = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x);
+    float rate_pitch = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y);
+    float rate_yaw = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z);
+    float accX = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_x);
+    float accY = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_y);
+    float accZ = _imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_z);
+    hal.console->printf("IL,%f,%f,%f,%f,%f,%f\n",accX, accY, accZ, rate_roll, rate_pitch, rate_yaw);
 
     float interial_rate_roll, interial_rate_pitch, interial_rate_yaw { 0.f };
     std::tie(interial_rate_roll, interial_rate_pitch, interial_rate_yaw) = RotationBI(_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_x),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_y),_imu.getMeasurements().at(IMU::Sensors::IMU1).at(IMU::Measurements::gyr_z));
@@ -51,15 +51,15 @@ void Controller::MiddleLoop()
     }
 
     // For logging Kalman test
-    // float _x, _y, _z, _roll, _ptich, _yaw {0.f};
-    // std::tie(_x, _y, _z, _roll, _ptich, _yaw) = _fake_measurement.getMeasurementForLogging();
+    float _x, _y, _z, _roll, _ptich, _yaw {0.f};
+    std::tie(_x, _y, _z, _roll, _ptich, _yaw) = _fake_measurement.getMeasurementForLogging();
     
-    // float baroZ = _barometer.getMeasurements().at(Barometer::Sensors::baro_2).at(Barometer::Measurements::baro_altitude);
-    // float magX = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
-    // float magY = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_y);
-    // float magZ = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_z);
+    float baroZ = _barometer.getMeasurements().at(Barometer::Sensors::baro_2).at(Barometer::Measurements::baro_altitude);
+    float magX = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_x);
+    float magY = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_y);
+    float magZ = _magnetometer.getMeasurements().at(Magnetometer::Measurements::mag_z);
 
-    // hal.console->printf("ML,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",_x, _y, _z, _roll, _ptich, _yaw, baroZ, magX, magY,magZ);
+    hal.console->printf("ML,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f\n",_x, _y, _z, _roll, _ptich, _yaw, baroZ, magX, magY,magZ);
 
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
@@ -107,7 +107,7 @@ void Controller::adjustOutput()
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
     //hal.console->printf("Roll: %f| Pitch: %f| Yaw: %f| u_p: %f| u_b: %f | %f | u_f: %f| \n",roll,pitch,yaw,u_pitch,u_roll_b,u_pitch_b,u_roll);
-    hal.console->printf("F: %f|u_p_B %f|u_r_b %f|u_y_b %f | m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z,u_pitch_b,u_roll_b,u_yaw_b, omega_m1,omega_m2, omega_m3, omega_m4);
+    //hal.console->printf("F: %f|u_p_B %f|u_r_b %f|u_y_b %f | m1 %f| m2 %f| m3 %f| m4 %f| \n",u_z,u_pitch_b,u_roll_b,u_yaw_b, omega_m1,omega_m2, omega_m3, omega_m4);
     _motorController.setAllMotorAngularVelocity(omega_m1 + input_linearisation_rads, omega_m2 + input_linearisation_rads, omega_m3 + input_linearisation_rads, omega_m4 + input_linearisation_rads);
 }
 
