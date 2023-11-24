@@ -1152,15 +1152,33 @@ static inline void mavlink_msg_data16_decode_float(const mavlink_message_t* msg,
     data16->len = mavlink_msg_data16_get_len(msg);
     mavlink_msg_data16_get_data_float(msg, data16->data);
 }
+typedef struct __mavlink_data32_float {
+ uint8_t type;
+ uint8_t len;
+ float data[8];
+} mavlink_data32_float;
+
+static inline uint16_t mavlink_msg_data32_get_data_float(const mavlink_message_t* msg, float *data)
+{
+    return _MAV_RETURN_float_array(msg, data, 8,  2);
+}
+
+static inline void mavlink_msg_data32_decode_float(const mavlink_message_t* msg, mavlink_data32_float* data32)
+{
+    data32->type = mavlink_msg_data32_get_type(msg);
+    data32->len = mavlink_msg_data32_get_len(msg);
+    mavlink_msg_data32_get_data_float(msg, data32->data);
+}
 
 void GCS_MAVLINK_Copter::handleMessage(const mavlink_message_t &msg)
 {
-    if(msg.msgid == MAVLINK_MSG_ID_DATA16)
+    if(msg.msgid == MAVLINK_MSG_ID_DATA32)
     {
-        mavlink_data16_float m;
-        mavlink_msg_data16_decode_float(&msg, &m);
-
-        copter.sensor_gps_fake.setPosition(m.data[0], m.data[1], m.data[2]);
+        mavlink_data32_float m;
+        mavlink_msg_data32_decode_float(&msg, &m);
+        
+        copter.sensor_fake.setMeasurement(m.data[0], m.data[1], m.data[2], m.data[3], m.data[4], m.data[5]);
+        // copter.sensor_gps_fake.setPosition(m.data[0], m.data[1], m.data[2]);
     }
 
 #if MODE_GUIDED_ENABLED == ENABLED

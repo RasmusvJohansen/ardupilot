@@ -3,7 +3,7 @@
 class MotorMixing
 {
 public:
-    std::tuple<float, float, float, float> mix(float torque_roll, float torque_pitch, float torque_yaw, float force);
+    std::tuple<float, float, float, float> mix(float u_roll, float u_pitch, float u_yaw, float u_z);
 private:
     float kt { 0.011f };
     float km { 0.000327f };

@@ -18,6 +18,7 @@ void Barometer::init()
     // Init and calibration in system.cpp (search for barometer)
     AP::baro().init();
     AP::baro().calibrate();
+    AP::baro().update_calibration();
 }
 
 void Barometer::updateMeasurements()
@@ -34,8 +35,10 @@ void Barometer::updateMeasurements()
         {
             // Measure altitude in meters
             sensors.at(Barometer::Sensors(sensor)).at(Barometer::Measurements(measurement)) = AP::baro().get_altitude(sensor); // here it should get the corresponding measurement for the sensor and measurement type
+            // hal.console->printf("%f,", AP::baro().get_altitude(sensor));
         }
     }
+    // hal.console->printf("\n");
 }
 
 std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> Barometer::getMeasurements()

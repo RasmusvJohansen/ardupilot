@@ -10,6 +10,8 @@
 class Es_9_Motor
 {
 private:
+
+    bool isFlying{false};
     bool isArmed{false};
     uint8_t numMotors;
     uint16_t minPeriod { 1000 };
@@ -28,6 +30,10 @@ public:
     void setAllMotorPeriod(uint16_t periodMotorOne, uint16_t periodMotorTwo, uint16_t periodMotorThree, uint16_t periodMotorFour);
     void setAllMotorAngularVelocity(float motorOneAngularVelocity, float motorTwoAngularVelocity, float motorThreeAngularVelocity, float motorFourAngularVelocity);
     bool getIsArmed() const;
+    bool getIsFlying() const; 
+    void setIsFlying(bool isFlying);
+    void testMotors();
+
 };
 
 #endif

@@ -84,6 +84,7 @@
 #include "Es_9_Controllers/Controller.h"
 
 #include "Es_9_Sensor/GPS_fake.h"
+#include "Es_9_Sensor/fake_measurement.h"
 
 
 // Configuration
@@ -268,6 +269,8 @@ private:
     Barometer sensor_barometer;
     Magnetometer sensor_magnetometer;
     GPS_fake sensor_gps_fake;
+    fake_measurement sensor_fake;
+    
     
     // Filters.
     Complementary_Filter complementary_Filter{sensor_IMU, sensor_magnetometer};
@@ -275,20 +278,57 @@ private:
     // Actuator
     Es_9_Motor motorController {4};
 
+    //Start
+
     // Controller
     //  Remove magic numbers when time
-    ES_9_PID pid_roll {2.7f, 0.018f, 2.3f, 1.f/400.f};
-    ES_9_PID pid_pitch {2.7f, 0.018f, 2.3f, 1.f/400.f};
-    ES_9_PID pid_yaw {2.7f, 0.018f, 2.3f, 1.f/40.f};
-    ES_9_PID pid_altitude {2.f, 0.01f, 2.3f, 1.f/30.f};
+    // ES_9_PID pid_roll {2.5f, 0.05f, 0.40f, 1.f/50.f, 10.f};
+    // ES_9_PID pid_pitch {2.5f, 0.05f, 0.40f, 1.f/50.f, 10.f};
+    // ES_9_PID pid_yaw {3.f, 0.2f, 1.f, 1.f/50.f, 10.f};
 
-    Controller pid_controller{complementary_Filter, sensor_barometer, pid_roll, pid_pitch, pid_yaw, pid_altitude, motorController,sensor_gps_fake};
+    // //PID angular rate 
+    // ES_9_PID pid_roll_angularRate   {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    // ES_9_PID pid_pitch_angularRate  {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    // ES_9_PID pid_yaw_angularRate    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
 
-
+    // ES_9_PID pid_altitude {500.f, 50.f, 100.f, 1.f/50.f, 10.f};
+    // ES_9_PID pid_x {0.4f, 0.05f, 0.1f, 1.f/5.f, 10.f, 0.35f}; 
+    // ES_9_PID pid_y {0.4f, 0.05f, 0.1f, 1.f/5.f, 10.f, 0.35f}; 
     
+
+
+    //These look nice
+
+    // ES_9_PID pid_roll {2.5f, 0.f, 0.40f, 1.f/50.f, 10.f};
+    // ES_9_PID pid_pitch {2.5f, 0.f, 0.40f, 1.f/50.f, 10.f};
+    // ES_9_PID pid_yaw {2.5f, 0.f, 0.40f, 1.f/50.f, 10.f};
+
+    // //PID angular rate 
+    // ES_9_PID pid_roll_angularRate   {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    // ES_9_PID pid_pitch_angularRate  {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    // ES_9_PID pid_yaw_angularRate    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
+
+    // ES_9_PID pid_altitude {500.f, 50.f, 100.f, 1.f/50.f, 10.f};
+    // ES_9_PID pid_x {0.6f, 0.05f, 0.4f, 1.f/5.f, 10.f, 0.35f}; 
+    // ES_9_PID pid_y {0.6f, 0.05f, 0.4f, 1.f/5.f, 10.f, 0.35f}; 
+
+    ES_9_PID pid_roll   {3.f, 0.f, 1.f, 1.f/50.f, 10.f};
+    ES_9_PID pid_pitch  {3.f, 0.f, 1.f, 1.f/50.f, 10.f};
+    ES_9_PID pid_yaw    {3.5f, 0.f, 1.5f, 1.f/50.f, 10.f};
+
+    //PID angular rate 
+    ES_9_PID pid_roll_angularRate   {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    ES_9_PID pid_pitch_angularRate  {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    ES_9_PID pid_yaw_angularRate    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
+
+    ES_9_PID pid_altitude   {500.f, 50.f, 100.f, 1.f/50.f, 10.f};
+    ES_9_PID pid_x          {0.6f, 0.1f, 0.45f, 1.f/5.f, 10.f, 0.35f}; 
+    ES_9_PID pid_y          {0.6f, 0.1f, 0.45f, 1.f/5.f, 10.f, 0.35f}; 
+
+    Controller pid_controller{complementary_Filter, sensor_IMU, sensor_barometer, sensor_magnetometer, motorController,sensor_gps_fake, sensor_fake,pid_roll_angularRate,pid_pitch_angularRate,pid_yaw_angularRate, pid_roll, pid_pitch, pid_yaw, pid_altitude, pid_x, pid_y};
+
     //functions should be reworked in the future to a better structure 
     void Send_Battery_To_Radio(void);
-
 
     // used to detect MAVLink acks from GCS to stop compassmot
     uint8_t command_ack_counter;

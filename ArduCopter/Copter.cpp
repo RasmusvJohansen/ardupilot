@@ -176,8 +176,11 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 80, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 40, 120, 7),
-    SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, loop, 400, 5000, 9),
+    // SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 10, 100, 9),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, MiddleLoop, 50, 100, 10),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 100, 11),
+    
 
 
     SCHED_TASK(Send_Battery_To_Radio,10,100,99),
@@ -212,7 +215,7 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
 // SCHED_TASK_CLASS(AP_Baro,              &copter.barometer,             accumulate,    50,  90,  63), --------Baro inspiration
 
 #if LOGGING_ENABLED == ENABLED
-    SCHED_TASK(loop_rate_logging, LOOP_RATE, 50, 75),
+    // SCHED_TASK(loop_rate_logging, LOOP_RATE, 50, 75),
 #endif
 
     // SCHED_TASK(one_hz_loop,            1,    100,  81),
@@ -229,21 +232,21 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(GCS, (GCS *)&copter._gcs, update_send, 400, 550, 105),
 
 #if LOGGING_ENABLED == ENABLED
-    SCHED_TASK(ten_hz_logging_loop, 10, 350, 114),
-    SCHED_TASK(twentyfive_hz_logging, 25, 110, 117),
-    SCHED_TASK_CLASS(AP_Logger, &copter.logger, periodic_tasks, 400, 300, 120),
+    // SCHED_TASK(ten_hz_logging_loop, 10, 350, 114),
+    // SCHED_TASK(twentyfive_hz_logging, 25, 110, 117),
+    // SCHED_TASK_CLASS(AP_Logger, &copter.logger, periodic_tasks, 400, 300, 120),
 #endif
 
     // SCHED_TASK_CLASS(AP_InertialSensor,    &copter.ins,                 periodic,       400,  50, 123),
 
-    SCHED_TASK_CLASS(AP_Scheduler, &copter.scheduler, update_logging, 0.1, 75, 126),
+    // SCHED_TASK_CLASS(AP_Scheduler, &copter.scheduler, update_logging, 0.1, 75, 126),
     // #if AP_RPM_ENABLED
     //     SCHED_TASK_CLASS(AP_RPM,               &copter.rpm_sensor,          update,          40, 200, 129),
     // #endif
 
 
     // Barometer calibration.
-    SCHED_TASK_CLASS(AP_TempCalibration, &copter.g2.temp_calibration, update, 10, 100, 135),
+    // SCHED_TASK_CLASS(AP_TempCalibration, &copter.g2.temp_calibration, update, 10, 100, 135),
 };
 
 void Copter::get_scheduler_tasks(const AP_Scheduler::Task *&tasks,
@@ -493,6 +496,15 @@ void Copter::rc_loop()
         }
     }
 
+    if(rc().channel(7)->get_radio_in() > 1500)
+    {
+        if(motorController.getIsArmed())
+        {
+            motorController.setIsFlying(true);
+        }
+    }
+
+
     if(!motorController.getIsArmed())
     {
         return;
@@ -500,24 +512,30 @@ void Copter::rc_loop()
 
     if (rc().channel(2)->get_radio_in() > 1500)
     {
-        pid_altitude.setReference(pid_altitude.getReference() + 0.1f/400.f);
+        pid_altitude.setReference(pid_altitude.getReference() + 0.1f/100.f);
     }
     else if (rc().channel(2)->get_radio_in() < 1500)
     {
-        pid_altitude.setReference(pid_altitude.getReference() - 0.1f/400.f);
+        pid_altitude.setReference(pid_altitude.getReference() - 0.1f/100.f);
     }
 
-    float input_scale { (40.f * (M_PI)/ 180.f) / 1000.f };
+    float input_scale_ang { (40.f * (M_PI)/ 180.f) / 1000.f };
+    float input_offset_ang { 1500.f * input_scale_ang };
+    float input_scale { 0.6f / 1000.f }; //0.0008
     float input_offset { 1500.f * input_scale };
 
     int16_t rc_in_roll = rc().channel(0)->get_radio_in();
-    pid_roll.setReference(rc_in_roll * input_scale - input_offset);
+    // pid_roll.setReference(rc_in_roll * input_scale - input_offset);
+    pid_y.setReference(rc_in_roll * input_scale - input_offset);
 
     int16_t rc_in_pitch = rc().channel(1)->get_radio_in();
-    pid_pitch.setReference(rc_in_pitch * input_scale - input_offset);
+    // pid_pitch.setReference(rc_in_pitch * input_scale - input_offset);
+    pid_x.setReference(rc_in_pitch * input_scale - input_offset);
+
+
 
     int16_t rc_in_yaw = rc().channel(3)->get_radio_in();
-    pid_yaw.setReference(rc_in_yaw * input_scale - input_offset);
+    pid_yaw.setReference(rc_in_yaw * input_scale_ang - input_offset_ang);
 
 
     // hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());

@@ -8,20 +8,9 @@ void Magnetometer::init()
         measurements.insert({Magnetometer::Measurements(measurement), 0.0});
     }
 
-    // add every type of measurment to each sensor.
-    for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
-    {
-        sensors.insert({Magnetometer::Sensors(sensor), measurements});
-    }
-
     // Init sensors here
     // ahrs and compass init in system.cpp line 118
     AP::compass().init();
-
-    // Create offset for yaw, so we always start at 0 yaw
-    AP::compass().read();
-    mag = AP::compass().get_field(static_cast<int>(Sensors::Mag1));
-    yaw_start_value = atan2f(mag.x, mag.y);
 }
 
 void Magnetometer::updateMeasurements()
@@ -30,30 +19,22 @@ void Magnetometer::updateMeasurements()
     AP::compass().read();
     // Goes through each sensor, and measurement type and update each values with the current measurement.
 
-    for (int sensor = 0; sensor != static_cast<int>(Sensors::Sensor_List_stop); sensor++)
-    {
-        // Return the current field as a Vector3f in milligauss
-        mag = AP::compass().get_field(sensor);
+    // Return the current field as a Vector3f in milligauss
+    mag = AP::compass().get_field(SensorLocation);
+    measurements.at(Measurements::mag_x) = mag.x;
+    measurements.at(Measurements::mag_y) = -mag.y;
+    measurements.at(Measurements::mag_z) = -mag.z;
 
-        for (int measurement = 0; measurement != static_cast<int>(Measurements::Measurements_Type_List_Stop); measurement++)
-        {
-            // Calculate yaw in rad
-            sensors.at(Magnetometer::Sensors(sensor)).at(Magnetometer::Measurements(measurement)) = atan2f(mag.x, mag.y) - yaw_start_value; // here it should get the corresponding measurement for the sensor and measurement type
-            
-        }
-    }
+    // hal.console->printf("%f,%f,%f \n",mag.x, mag.y, mag.z);
 }
 
-std::map<Magnetometer::Sensors, std::map<Magnetometer::Measurements, float>> Magnetometer::getMeasurements()
+std::map<Magnetometer::Measurements, float> Magnetometer::getMeasurements()
 {
-    return {sensors};
+    return {measurements};
 }
 
 void Magnetometer::loop()
 {
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
-
     updateMeasurements();
-    //hal.console->printf("Yaw: %.2f \n", sensors.at(Magnetometer::Sensors::Mag1).at(Magnetometer::Measurements::mag_yaw));
-    // hal.console->printf("Offset: %.2f \n", yaw_start_value);
 }
