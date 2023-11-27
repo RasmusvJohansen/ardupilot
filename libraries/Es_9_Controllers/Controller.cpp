@@ -124,36 +124,6 @@ bool Controller::runController()
     return true;
 }
 
-std::tuple<float, float, float> Controller::body_angularRate_to_inertial_angular_rate(float body_rate_x, float body_rate_y, float body_rate_z)
-{
-    float roll, pitch, yaw, z {0.f};
-    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
-
-    //T_inv
-    float inertial_rate_roll =  1*body_rate_x   +tanf(pitch)*sinf(roll)*body_rate_y     +tanf(pitch)*cosf(roll)*body_rate_z; 
-    float inertial_rate_pitch = 0*body_rate_x   +cosf(roll)            *body_rate_y     -sinf(roll)            *body_rate_z;
-    float inertial_rate_yaw =   0*body_rate_x   +sinf(roll)/cosf(pitch)*body_rate_y     +cosf(roll)/cosf(pitch)*body_rate_z;
-
-
-    return {inertial_rate_roll, inertial_rate_pitch, inertial_rate_yaw};
-}
-
-
-std::tuple<float, float, float> Controller::inertial_angularRate_to_body_angular_rate(float i_rate_x, float i_rate_y, float i_rate_z)
-{
-    float roll, pitch, yaw, z {0.f};
-    std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
-
-    //T
-    float body_rate_roll =  1*i_rate_x   +0                     *i_rate_y              -sinf(pitch)*i_rate_z; 
-    float body_rate_pitch = 0*i_rate_x   +cosf(roll)            *i_rate_y     +cosf(pitch)*sinf(roll)*i_rate_z;
-    float body_rate_yaw =   0*i_rate_x   -sinf(roll)            *i_rate_y     +cosf(roll)*cosf(pitch)*i_rate_z;
-
-
-    
-
-    return {body_rate_roll, body_rate_pitch, body_rate_yaw};
-}
 
 
 
