@@ -21,8 +21,6 @@ public:
     virtual void updateMeasurements() override;
     std::map<Magnetometer::Measurements, float> getMeasurements();
 
-    virtual void loop() override;
-
 private:
     Vector3f mag;
     int SensorLocation { 0 };

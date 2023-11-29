@@ -278,40 +278,6 @@ private:
     // Actuator
     Es_9_Motor motorController {4};
 
-    //Start
-
-    // Controller
-    //  Remove magic numbers when time
-    // ES_9_PID pid_roll {2.5f, 0.05f, 0.40f, 1.f/50.f, 10.f};
-    // ES_9_PID pid_pitch {2.5f, 0.05f, 0.40f, 1.f/50.f, 10.f};
-    // ES_9_PID pid_yaw {3.f, 0.2f, 1.f, 1.f/50.f, 10.f};
-
-    // //PID angular rate 
-    // ES_9_PID pid_roll_angularRate   {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    // ES_9_PID pid_pitch_angularRate  {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    // ES_9_PID pid_yaw_angularRate    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
-
-    // ES_9_PID pid_altitude {500.f, 50.f, 100.f, 1.f/50.f, 10.f};
-    // ES_9_PID pid_x {0.4f, 0.05f, 0.1f, 1.f/5.f, 10.f, 0.35f}; 
-    // ES_9_PID pid_y {0.4f, 0.05f, 0.1f, 1.f/5.f, 10.f, 0.35f}; 
-    
-
-
-    //These look nice
-
-    // ES_9_PID pid_roll {2.5f, 0.f, 0.40f, 1.f/50.f, 10.f};
-    // ES_9_PID pid_pitch {2.5f, 0.f, 0.40f, 1.f/50.f, 10.f};
-    // ES_9_PID pid_yaw {2.5f, 0.f, 0.40f, 1.f/50.f, 10.f};
-
-    // //PID angular rate 
-    // ES_9_PID pid_roll_angularRate   {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    // ES_9_PID pid_pitch_angularRate  {300.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    // ES_9_PID pid_yaw_angularRate    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
-
-    // ES_9_PID pid_altitude {500.f, 50.f, 100.f, 1.f/50.f, 10.f};
-    // ES_9_PID pid_x {0.6f, 0.05f, 0.4f, 1.f/5.f, 10.f, 0.35f}; 
-    // ES_9_PID pid_y {0.6f, 0.05f, 0.4f, 1.f/5.f, 10.f, 0.35f}; 
-
     ES_9_PID pid_roll   {3.f, 0.f, 1.f, 1.f/50.f, 10.f};
     ES_9_PID pid_pitch  {3.f, 0.f, 1.f, 1.f/50.f, 10.f};
     ES_9_PID pid_yaw    {3.5f, 0.f, 1.5f, 1.f/50.f, 10.f};

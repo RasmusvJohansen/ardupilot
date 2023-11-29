@@ -24,17 +24,9 @@ void Magnetometer::updateMeasurements()
     measurements.at(Measurements::mag_x) = mag.x;
     measurements.at(Measurements::mag_y) = -mag.y;
     measurements.at(Measurements::mag_z) = -mag.z;
-
-    // hal.console->printf("%f,%f,%f \n",mag.x, mag.y, mag.z);
 }
 
 std::map<Magnetometer::Measurements, float> Magnetometer::getMeasurements()
 {
     return {measurements};
-}
-
-void Magnetometer::loop()
-{
-    // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
-    updateMeasurements();
 }

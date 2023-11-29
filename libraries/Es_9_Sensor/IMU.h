@@ -33,8 +33,6 @@ public:
     virtual void updateMeasurements() override;
     std::map<IMU::Sensors, std::map<IMU::Measurements, float>> getMeasurements();
 
-    virtual void loop() override;
-
 private:
     Vector3f acc;
     Vector3f gyr;
