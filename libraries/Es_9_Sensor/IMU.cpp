@@ -58,9 +58,12 @@ std::map<IMU::Sensors, std::map<IMU::Measurements, float>> IMU::getMeasurements(
 
 void IMU::loop()
 {
+    
     // main loop for the sensors should contain, updateMeasurements and any transformation which should be applied to the measurements.
 
     updateMeasurements();
     //hal.console->printf("Roll: %.2f ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_roll));
     //hal.console->printf("Pitch: %.2f \n ", sensors.at(IMU::Sensors::IMU1).at(IMU::Measurements::acc_pitch));
+
+    
 }

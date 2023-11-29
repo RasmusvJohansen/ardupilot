@@ -181,6 +181,10 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(Controller, &copter.pid_controller, MiddleLoop, 50, 100, 10),
     SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 100, 11),
     
+    // TEST for feasability
+    // uint32_t timeTest = AP_HAL::micros();
+    // uint32_t period = AP_HAL::micros() - timeTest;
+    // hal.console->printf("%lu \n", period );
 
 
     SCHED_TASK(Send_Battery_To_Radio,10,100,99),
@@ -536,8 +540,6 @@ void Copter::rc_loop()
 
     int16_t rc_in_yaw = rc().channel(3)->get_radio_in();
     pid_yaw.setReference(rc_in_yaw * input_scale_ang - input_offset_ang);
-
-
     // hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());
 }
 
