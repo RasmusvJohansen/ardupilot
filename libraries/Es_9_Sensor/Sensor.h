@@ -11,7 +11,6 @@ public:
     virtual void init();
     virtual void updateMeasurements();
     // this is used in the scheduler to act as a main loop, which describes what should be run when the scheduler activates.
-    virtual void loop();
 
 private:
 };

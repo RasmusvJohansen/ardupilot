@@ -173,11 +173,11 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     // SCHED_TASK(update_batt_compass, 10, 120, 15),
 
     // SCHED_TASK_CLASS(Accelerometers, &copter.sensor_accelerometer, loop, 250, 130, 4),
-    SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, loop, 400, 50, 5),
-    SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, loop, 80, 100, 6),
-    SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, loop, 40, 120, 7),
+    SCHED_TASK_CLASS(IMU, &copter.sensor_IMU, updateMeasurements, 400, 50, 5),
+    SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, updateMeasurements, 80, 100, 6),
+    SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, updateMeasurements, 40, 120, 7),
     // SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 10, 100, 9),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 5, 100, 9),
     SCHED_TASK_CLASS(Controller, &copter.pid_controller, MiddleLoop, 50, 100, 10),
     SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 100, 11),
     
@@ -504,7 +504,6 @@ void Copter::rc_loop()
         }
     }
 
-
     if(!motorController.getIsArmed())
     {
         return;
@@ -521,24 +520,14 @@ void Copter::rc_loop()
 
     float input_scale_ang { (40.f * (M_PI)/ 180.f) / 1000.f };
     float input_offset_ang { 1500.f * input_scale_ang };
-    float input_scale { 0.6f / 1000.f }; //0.0008
+    float input_scale { 0.6f / 1000.f };
     float input_offset { 1500.f * input_scale };
-
     int16_t rc_in_roll = rc().channel(0)->get_radio_in();
-    // pid_roll.setReference(rc_in_roll * input_scale - input_offset);
     pid_y.setReference(rc_in_roll * input_scale - input_offset);
-
     int16_t rc_in_pitch = rc().channel(1)->get_radio_in();
-    // pid_pitch.setReference(rc_in_pitch * input_scale - input_offset);
     pid_x.setReference(rc_in_pitch * input_scale - input_offset);
-
-
-
     int16_t rc_in_yaw = rc().channel(3)->get_radio_in();
     pid_yaw.setReference(rc_in_yaw * input_scale_ang - input_offset_ang);
-
-
-    // hal.console->printf("Alt: %f | Att: %f, %f, %f \n", pid_altitude.getReference(), pid_roll.getReference(), pid_pitch.getReference(), pid_yaw.getReference());
 }
 
 // throttle_loop - should be run at 50 hz

@@ -28,8 +28,6 @@ public:
     virtual void updateMeasurements() override;
     std::map<Barometer::Sensors, std::map<Barometer::Measurements, float>> getMeasurements();
 
-    virtual void loop() override;
-
 private:
     const AP_HAL::HAL &hal = AP_HAL::get_HAL();
 

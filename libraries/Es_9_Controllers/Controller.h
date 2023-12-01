@@ -1,7 +1,6 @@
 #pragma once
 
 #include "ES_9_PID.h"
-#include "MotorMixing.h"
 #include "Es_9_Filter/Complementary_Filter.h"
 #include "Es_9_Sensor/Barometer.h"
 #include "Es_9_Sensor/Magnetometer.h"
@@ -21,7 +20,6 @@ public:
 
 private:
     Es_9_Motor& _motorController;
-    MotorMixing motor_mixing;
 
     Complementary_Filter& _complementary_filter;
     IMU& _imu;
@@ -51,6 +49,7 @@ private:
     void adjustOutput();
     bool runController();
 
+    std::tuple<float, float, float, float> MotorMix(float u_roll, float u_pitch, float u_yaw, float u_z);
     std::tuple<float, float, float> RotationBI(float roll_b, float pitch_b, float yaw_b);
     std::tuple<float, float, float> RotationIB(float roll_i, float pitch_i, float yaw_i);
 };

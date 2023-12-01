@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Es_9_Sensor/Accelerometers.h" 
 #include "Es_9_Sensor/IMU.h"
 #include "Es_9_Sensor/Magnetometer.h"
 #include "AP_HAL/AP_HAL.h"

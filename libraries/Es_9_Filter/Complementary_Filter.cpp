@@ -7,28 +7,13 @@ Complementary_Filter::Complementary_Filter(IMU& imu, Magnetometer& magnetometer)
 
 void Complementary_Filter::loop()
 {
-    
     updateRoll();
     updatePitch();
     updateYaw();
-    // hal.console->printf("roll: %.2f pitch: %.2f yaw: %.2f wrap: %.2f \n",Complementary_roll,Complementary_pitch,Complementary_yaw,wrap_around);
-    
 }
 
 void Complementary_Filter::updateRoll()
-{
-    
-    //add majority vote or redundancy check to determine which sensor to use. 
-
-    //roll is a combination of the accelerometer and gyroscope. 
-    //both run at the same frequency so the update can just be run on the new measurements. 
-    
-
-    //steps
-    //1. get roll from _accelrometers and _IMU 
-    //2. fuse both sensor measurements
-    //3. save it to the complementary filter. 
-    
+{    
     // sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_roll) = atan2f(-acc.y, -acc.z);
         // sensors.at(IMU::Sensors(sensor)).at(IMU::Measurements::acc_pitch) = atan2f(-acc.x, -acc.z);
 
