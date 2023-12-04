@@ -177,9 +177,10 @@ const AP_Scheduler::Task Copter::scheduler_tasks[] = {
     SCHED_TASK_CLASS(Barometer, &copter.sensor_barometer, updateMeasurements, 80, 100, 6),
     SCHED_TASK_CLASS(Magnetometer, &copter.sensor_magnetometer, updateMeasurements, 40, 120, 7),
     // SCHED_TASK_CLASS(Complementary_Filter, &copter.complementary_Filter, loop, 400, 1000, 8),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 5, 100, 9),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, MiddleLoop, 50, 100, 10),
-    SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 100, 11),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, OuterLoop, 10, 100, 9),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, CascadeLoop3,25,100,10),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, MiddleLoop, 50, 100, 11),
+    SCHED_TASK_CLASS(Controller, &copter.pid_controller, InnerLoop, 400, 100, 12),
     
 
 

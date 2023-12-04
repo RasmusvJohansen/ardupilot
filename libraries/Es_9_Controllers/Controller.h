@@ -43,7 +43,7 @@ private:
     //CascadeLoop3 PID
     ES_9_PID& _pid_velocity_x;
     ES_9_PID& _pid_velocity_y;
-    ES_9_PID& _PID_velocity_z; 
+    ES_9_PID& _pid_velocity_z; 
     
     // Outer PID
     ES_9_PID& _pid_x;
