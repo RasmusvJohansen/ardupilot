@@ -3,8 +3,8 @@
 #include <AP_HAL/AP_HAL.h>
 extern const AP_HAL::HAL &hal;
 
-Controller::Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_altitude, ES_9_PID& pid_x, ES_9_PID& pid_y) :
-    _complementary_filter{ complementary_filter }, _imu{ imu }, _barometer{ barometer }, _magnetometer{ magnetometer }, _motorController{ motor_controller }, _gps{ gps }, _fake_measurement { fake_measurement }, _pid_roll_angularRate{ pid_roll_angularRate }, _pid_pitch_angularRate{ pid_pitch_angularRate }, _pid_yaw_angularRate{ pid_yaw_angularRate }, _pid_roll{ pid_roll }, _pid_pitch{ pid_pitch }, _pid_yaw{ pid_yaw }, _pid_altitude{ pid_altitude }, _pid_x{ pid_x }, _pid_y{ pid_y }
+    Controller::Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_velocity_x, ES_9_PID& pid_velocity_y, ES_9_PID& pid_velocity_z, ES_9_PID& pid_altitude, ES_9_PID& pid_x, ES_9_PID& pid_y) :
+    _complementary_filter{ complementary_filter }, _imu{ imu }, _barometer{ barometer }, _magnetometer{ magnetometer }, _motorController{ motor_controller }, _gps{ gps }, _fake_measurement { fake_measurement }, _pid_roll_angularRate{ pid_roll_angularRate }, _pid_pitch_angularRate{ pid_pitch_angularRate }, _pid_yaw_angularRate{ pid_yaw_angularRate }, _pid_roll{ pid_roll }, _pid_pitch{ pid_pitch }, _pid_yaw{ pid_yaw }, _pid_velocity_x{pid_velocity_x},_pid_velocity_y{pid_velocity_y},_PID_velocity_z{pid_velocity_z}, _pid_altitude{ pid_altitude }, _pid_x{ pid_x }, _pid_y{ pid_y }
 {
 
 }
