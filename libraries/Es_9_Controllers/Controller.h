@@ -13,9 +13,10 @@
 class Controller
 {
 public:
-    Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_altitude, ES_9_PID& pid_x, ES_9_PID& pid_y);
+    Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_velocity_x, ES_9_PID& pid_velocity_y, ES_9_PID& pid_velocity_z, ES_9_PID& pid_altitude, ES_9_PID& pid_x, ES_9_PID& pid_y);
     void InnerLoop();
     void MiddleLoop();
+    void CascadeLoop3();
     void OuterLoop();
 
 private:
@@ -39,6 +40,11 @@ private:
     ES_9_PID& _pid_yaw;
     ES_9_PID& _pid_altitude;
 
+    //CascadeLoop3 PID
+    ES_9_PID& _pid_velocity_x;
+    ES_9_PID& _pid_velocity_y;
+    ES_9_PID& _PID_velocity_z; 
+    
     // Outer PID
     ES_9_PID& _pid_x;
     ES_9_PID& _pid_y;
