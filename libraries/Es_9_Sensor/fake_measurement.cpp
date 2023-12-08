@@ -10,6 +10,12 @@ std::tuple<float, float, float> fake_measurement::getPosition() const
     return { x, y, altitude };
 }
 
+std::tuple<float, float, float> fake_measurement::getVelocity() const
+{
+    return { v_x, v_y ,v_z };
+}
+
+
 std::tuple<float, float, float, float, float, float> fake_measurement::getMeasurementForLogging() const
 {
     return { x, y, altitude, attitude.at(0), attitude.at(1), attitude.at(2)};
@@ -28,6 +34,10 @@ void fake_measurement::setMeasurement(float roll_b, float pitch_b, float yaw_b, 
   
 
 
+    v_x = (X-x)*50.f;
+    v_y = (Y-y)*50.f;
+    v_z = (Altitude-altitude)*50.f;
+    
     attitude.at(0) = roll_b;
     attitude.at(1) = pitch_b;
     attitude.at(2) = yaw_b;

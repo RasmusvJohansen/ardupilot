@@ -278,25 +278,25 @@ private:
     // Actuator
     Es_9_Motor motorController {4};
 
-    ES_9_PID pid_roll   {3.f, 0.f, 1.f, 1.f/50.f, 10.f};
-    ES_9_PID pid_pitch  {3.f, 0.f, 1.f, 1.f/50.f, 10.f};
-    ES_9_PID pid_yaw    {3.5f, 0.f, 1.5f, 1.f/50.f, 10.f};
+    ES_9_PID pid_roll   {3.f, 0.f, 0.1f, 1.f/50.f, 10.f};
+    ES_9_PID pid_pitch  {3.f, 0.f, 0.1f, 1.f/50.f, 10.f};
+    ES_9_PID pid_yaw    {3.f, 0.2f, 0.1f, 1.f/50.f, 10.f};
 
     //PID angular rate 
     ES_9_PID pid_roll_angularRate   {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
     ES_9_PID pid_pitch_angularRate  {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    ES_9_PID pid_yaw_angularRate    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
+    ES_9_PID pid_yaw_angularRate    {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
 
     //PID velocity
 
-    ES_9_PID pid_velocity_x {1.f, 0.f, 0.f, 1.f/10.f, 20.f};
-    ES_9_PID pid_velocity_y {1.f, 0.f, 0.f, 1.f/10.f, 20.f};
-    ES_9_PID pid_velocity_z {1.f, 0.f, 0.f, 1.f/10.f, 20.f};
+    ES_9_PID pid_velocity_x {0.5f, 0.1f, 0.08f, 1.f/25.f, 20.f,0.35};
+    ES_9_PID pid_velocity_y {0.5f, 0.1f, 0.08f, 1.f/25.f, 20.f,0.35};
+    ES_9_PID pid_velocity_z {200.f, 0.f, 0.f, 1.f/50.f, 20.f};
 
     //PID Position
-    ES_9_PID pid_altitude   {500.f, 50.f, 100.f, 1.f/50.f, 10.f};
-    ES_9_PID pid_x          {0.6f, 0.1f, 0.45f, 1.f/2.5f, 10.f, 0.35f}; 
-    ES_9_PID pid_y          {0.6f, 0.1f, 0.45f, 1.f/2.5f, 10.f, 0.35f}; 
+    ES_9_PID pid_altitude   {2.5f, 0.9f, 0.1f, 1.f/25.f, 10.f};
+    ES_9_PID pid_x          {0.4f, 0.05f, 0.1f, 1.f/10.f, 10.f}; 
+    ES_9_PID pid_y          {0.4f, 0.05f, 0.1f, 1.f/10.f, 10.f}; 
 
     Controller pid_controller{complementary_Filter, sensor_IMU, sensor_barometer, sensor_magnetometer, motorController,sensor_gps_fake, sensor_fake,pid_roll_angularRate,pid_pitch_angularRate,pid_yaw_angularRate, pid_roll, pid_pitch, pid_yaw,pid_velocity_x,pid_velocity_y,pid_velocity_z, pid_altitude, pid_x, pid_y};
 
