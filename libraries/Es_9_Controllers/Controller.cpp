@@ -35,7 +35,8 @@ void Controller::MiddleLoop()
     }
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
-
+    float v_x, v_y, v_z {0.f};
+    std::tie(v_x, v_y, v_z) = _fake_measurement.getVelocity();
 
     float reference_angularRate_roll = _pid.PID_Attitude.roll.calculatePIDOutput(roll);
     float reference_angularRate_pitch = _pid.PID_Attitude.pitch.calculatePIDOutput(pitch);
@@ -44,7 +45,7 @@ void Controller::MiddleLoop()
     _pid.PID_AngularRate.roll.setReference(reference_angularRate_roll);
     _pid.PID_AngularRate.pitch.setReference(reference_angularRate_pitch);
     _pid.PID_AngularRate.yaw.setReference(reference_angularRate_yaw);
-    u_z = _pid_altitude.calculatePIDOutput(z);
+    u_z = _pid.PID_Velocity.z.calculatePIDOutput(v_z);
 
     adjustOutput();
 }
@@ -63,12 +64,12 @@ void Controller::CascadeLoop3()
     float v_x, v_y, v_z {0.f};
     std::tie(v_x, v_y, v_z) = _fake_measurement.getVelocity();
 
-    float reference_pitch = _pid_velocity_x.calculatePIDOutput(v_x);
-    float reference_roll = -_pid_velocity_y.calculatePIDOutput(v_y); //obs -
-    _pid_roll.setReference(reference_roll);
-    _pid_pitch.setReference(reference_pitch);
-    float reference_vz = _pid_altitude.calculatePIDOutput(z);
-    _pid_velocity_z.setReference(reference_vz);
+    float reference_pitch = _pid.PID_Velocity.x.calculatePIDOutput(v_x);
+    float reference_roll = -_pid.PID_Velocity.y.calculatePIDOutput(v_y); //obs -
+    _pid.PID_Attitude.roll.setReference(reference_roll);
+    _pid.PID_Attitude.pitch.setReference(reference_pitch);
+    float reference_vz = _pid.PID_Position.z.calculatePIDOutput(z);
+    _pid.PID_Velocity.z.setReference(reference_vz);
     
     
 }
@@ -84,10 +85,10 @@ void Controller::OuterLoop()
     float x, y, z {0.f};
     std::tie(x, y, z) = _fake_measurement.getPosition();
 
-    float reference_vy = _pid_y.calculatePIDOutput(y); 
-    float reference_vx = _pid_x.calculatePIDOutput(x);
-    _pid_velocity_x.setReference(reference_vx);
-    _pid_velocity_y.setReference(reference_vy);
+    float reference_vy = _pid.PID_Position.y.calculatePIDOutput(y); 
+    float reference_vx = _pid.PID_Position.x.calculatePIDOutput(x);
+    _pid.PID_Velocity.x.setReference(reference_vx);
+    _pid.PID_Velocity.y.setReference(reference_vy);
 }
 
 void Controller::adjustOutput()

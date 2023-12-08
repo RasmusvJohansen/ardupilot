@@ -282,15 +282,15 @@ private:
     
     Controller::PID_Container PID_container;
     //PID attitude
-    PID_container.PID_Attitude.roll = ES_9_PID roll{3.f, 0.f, 1.f, 1.f/50.f, 10.f};
-    PID_container.PID_Attitude.pitch = ES_9_PID pitch{3.f, 0.f, 1.f, 1.f/50.f, 10.f};
-    PID_container.PID_Attitude.yaw = ES_9_PID yaw{3.5f, 0.f, 1.5f, 1.f/50.f, 10.f};
+    PID_container.PID_Attitude.roll = ES_9_PID{3.f, 0.f, 1.f, 1.f/50.f, 10.f};;
+    PID_container.PID_Attitude.pitch = ES_9_PID{3.f, 0.f, 1.f, 1.f/50.f, 10.f};
+    PID_container.PID_Attitude.yaw = ES_9_PID{3.5f, 0.f, 1.5f, 1.f/50.f, 10.f};
     
     //PID angularRate
     
-    PID_container.PID_AngularRate.roll = ES_9_PID roll   {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    PID_container.PID_AngularRate.pitch = ES_9_PID pitch  {500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
-    PID_container.PID_AngularRate.yaw  = ES_9_PID yaw    {200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
+    PID_container.PID_AngularRate.roll = ES_9_PID{500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    PID_container.PID_AngularRate.pitch = ES_9_PID{500.f, 0.f, 0.f, 1.f/400.f, 20.f}; 
+    PID_container.PID_AngularRate.yaw  = ES_9_PID{200.f, 50.f, 0.f, 1.f/400.f, 20.f}; 
     //PID velocity
     PID_container.PID_Velocity.x = ES_9_PID x {1.f, 0.f, 0.f, 1.f/10.f, 20.f};
     PID_container.PID_Velocity.y = ES_9_PID y {1.f, 0.f, 0.f, 1.f/10.f, 20.f};
@@ -302,7 +302,7 @@ private:
     
 
 
-    Controller pid_controller{complementary_Filter, sensor_IMU, sensor_barometer, sensor_magnetometer, motorController,sensor_gps_fake, sensor_fake,PID_container};
+    // Controller pid_controller{complementary_Filter, sensor_IMU, sensor_barometer, sensor_magnetometer, motorController,sensor_gps_fake, sensor_fake,PID_container};
 
     //functions should be reworked in the future to a better structure 
     void Send_Battery_To_Radio(void);
