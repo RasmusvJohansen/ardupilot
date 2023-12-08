@@ -21,8 +21,7 @@ void Controller::InnerLoop()
     u_roll = _pid_roll_angularRate.calculatePIDOutput(interial_rate_roll);
     u_pitch = _pid_pitch_angularRate.calculatePIDOutput(interial_rate_pitch);
     u_yaw = _pid_yaw_angularRate.calculatePIDOutput(interial_rate_yaw);
-    u_roll = 0 ;
-    u_yaw =  0 ; 
+   
     adjustOutput();
 }
 void Controller::MiddleLoop()
@@ -46,7 +45,6 @@ void Controller::MiddleLoop()
     _pid_pitch_angularRate.setReference(reference_angularRate_pitch);
     _pid_yaw_angularRate.setReference(reference_angularRate_yaw);
     u_z = _pid_velocity_z.calculatePIDOutput(v_z);
-    u_z = 0;
     adjustOutput();
 }
 
@@ -98,7 +96,7 @@ void Controller::adjustOutput()
     std::tie(u_roll_b,u_pitch_b,u_yaw_b) = RotationIB(u_roll,u_pitch,u_yaw);
     std::tie(omega_m1, omega_m2, omega_m3, omega_m4) = MotorMix(u_roll_b, u_pitch_b, u_yaw_b, u_z); //rasmus har lavet ballade her
 
-    //hal.console->printf("roll: %.02f|\n",u_roll);
+    hal.console->printf("roll: %.02f|pitch: %0.2f|yaw: %0.2f|u_z: %0.2f|\n",u_roll,u_pitch,u_yaw,u_z);
 
     float roll, pitch, yaw, z {0.f};
     std::tie(roll, pitch, yaw, z) = _fake_measurement.getMeasurement();
