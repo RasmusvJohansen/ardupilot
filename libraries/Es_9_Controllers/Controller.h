@@ -13,14 +13,57 @@
 class Controller
 {
 public:
-    Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, ES_9_PID& pid_roll_angularRate, ES_9_PID& pid_pitch_angularRate, ES_9_PID& pid_yaw_angularRate, ES_9_PID& pid_roll, ES_9_PID& pid_pitch, ES_9_PID& pid_yaw, ES_9_PID& pid_velocity_x, ES_9_PID& pid_velocity_y, ES_9_PID& pid_velocity_z, ES_9_PID& pid_altitude, ES_9_PID& pid_x, ES_9_PID& pid_y);
+    struct PID_Container
+    {
+        struct  
+        {
+            //PID attitude
+            ES_9_PID roll;
+            ES_9_PID pitch;
+            ES_9_PID yaw;
+        }PID_Attitude;
+
+        struct 
+        {
+            //PID angular rate 
+            ES_9_PID roll; 
+            ES_9_PID pitch; 
+            ES_9_PID yaw; 
+        } PID_AngularRate;
+
+        struct
+        {
+            //PID velocity
+            ES_9_PID x;
+            ES_9_PID y;
+            ES_9_PID z;
+        }PID_Velocity;
+
+        struct
+        {
+            //PID Position
+            ES_9_PID z;
+            ES_9_PID x; 
+            ES_9_PID y; 
+        }PID_Position;
+    
+    };  
+
+
+    
+    Controller(Complementary_Filter& complementary_filter, IMU& imu, Barometer& barometer, Magnetometer& magnetometer, Es_9_Motor& motor_controller, GPS_fake& gps, fake_measurement& fake_measurement, PID_Container& pid);
     void InnerLoop();
     void MiddleLoop();
     void CascadeLoop3();
     void OuterLoop();
+    
+
 
 private:
     Es_9_Motor& _motorController;
+    
+    
+    PID_Container _pid;
 
     Complementary_Filter& _complementary_filter;
     IMU& _imu;
@@ -30,24 +73,25 @@ private:
     fake_measurement& _fake_measurement;
 
     // Inner PID
-    ES_9_PID& _pid_roll_angularRate;
-    ES_9_PID& _pid_pitch_angularRate;
-    ES_9_PID& _pid_yaw_angularRate;
 
-    // Middle PID
-    ES_9_PID& _pid_roll;
-    ES_9_PID& _pid_pitch;
-    ES_9_PID& _pid_yaw;
-    ES_9_PID& _pid_altitude;
+    // ES_9_PID& _pid_roll_angularRate;
+    // ES_9_PID& _pid_pitch_angularRate;
+    // ES_9_PID& _pid_yaw_angularRate;
 
-    //CascadeLoop3 PID
-    ES_9_PID& _pid_velocity_x;
-    ES_9_PID& _pid_velocity_y;
-    ES_9_PID& _pid_velocity_z; 
+    // // Middle PID
+    // ES_9_PID& _pid_roll;
+    // ES_9_PID& _pid_pitch;
+    // ES_9_PID& _pid_yaw;
+    // ES_9_PID& _pid_altitude;
+
+    // //CascadeLoop3 PID
+    // ES_9_PID& _pid_velocity_x;
+    // ES_9_PID& _pid_velocity_y;
+    // ES_9_PID& _PID_velocity_z; 
     
-    // Outer PID
-    ES_9_PID& _pid_x;
-    ES_9_PID& _pid_y;
+    // // Outer PID
+    // ES_9_PID& _pid_x;
+    // ES_9_PID& _pid_y;
 
     float input_linearisation_rads { 480.67f };
     // float input_linearisation_rads { 387.67f };
